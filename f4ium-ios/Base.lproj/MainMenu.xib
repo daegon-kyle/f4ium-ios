@@ -11,10 +11,10 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <menu title="AMainMenu" systemMenu="main" id="29" userLabel="MainMenu">
             <items>
-                <menuItem title="F4ium" id="56" userLabel="F4ium">
+                <menuItem title="F4ium" id="56" userLabel="f4ium-ios">
                     <menu key="submenu" title="F4ium" systemMenu="apple" id="57">
                         <items>
-                            <menuItem title="About F4ium" id="58" userLabel="About F4ium">
+                            <menuItem title="About f4ium-ios" id="58" userLabel="About f4ium-ios">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
@@ -33,7 +33,7 @@
                             <menuItem isSeparatorItem="YES" id="144">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Hide F4ium" keyEquivalent="h" id="134">
+                            <menuItem title="Hide f4ium-ios" keyEquivalent="h" id="134">
                                 <connections>
                                     <action selector="hide:" target="-1" id="367"/>
                                 </connections>
@@ -52,7 +52,7 @@
                             <menuItem isSeparatorItem="YES" id="149">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Quit F4ium" keyEquivalent="q" id="136" userLabel="Quit F4ium">
+                            <menuItem title="Quit f4ium-ios" keyEquivalent="q" id="136">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="369"/>
                                 </connections>
@@ -221,7 +221,7 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="486">
                         <items>
-                            <menuItem title="F4ium Help" keyEquivalent="?" id="487" userLabel="SonOfGrab Help">
+                            <menuItem title="f4ium-ios Help" keyEquivalent="?" id="487">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="488"/>
                                 </connections>
