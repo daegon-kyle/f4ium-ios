@@ -1,0 +1,480 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EA2685791F7384DF003BC6CE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2685781F7384DF003BC6CE /* AppDelegate.m */; };
+		EA26857E1F7384DF003BC6CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA26857D1F7384DF003BC6CE /* Assets.xcassets */; };
+		EA2685811F7384DF003BC6CE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA26857F1F7384DF003BC6CE /* MainMenu.xib */; };
+		EA26858C1F7384DF003BC6CE /* f4ium_iosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EA26858B1F7384DF003BC6CE /* f4ium_iosTests.m */; };
+		EA26859B1F73870D003BC6CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA26859A1F73870D003BC6CE /* Foundation.framework */; };
+		EA26859D1F738713003BC6CE /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA26859C1F738713003BC6CE /* Carbon.framework */; };
+		EA26859F1F738718003BC6CE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA26859E1F738718003BC6CE /* Cocoa.framework */; };
+		EA2685A71F738737003BC6CE /* Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2685A11F738737003BC6CE /* Controller.m */; };
+		EA2685A81F738737003BC6CE /* SOLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2685A31F738737003BC6CE /* SOLogger.m */; };
+		EA2685A91F738737003BC6CE /* StepCollectionViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2685A51F738737003BC6CE /* StepCollectionViewItem.m */; };
+		EA2685AA1F738737003BC6CE /* StepCollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA2685A61F738737003BC6CE /* StepCollectionViewItem.xib */; };
+		EA2685AD1F73874D003BC6CE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2685AB1F73874D003BC6CE /* main.m */; };
+		EA2685B11F738863003BC6CE /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EA2685B01F738863003BC6CE /* Info.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EA2685881F7384DF003BC6CE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA26856C1F7384DF003BC6CE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA2685731F7384DF003BC6CE;
+			remoteInfo = "f4ium-ios";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		EA2685741F7384DF003BC6CE /* f4ium-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "f4ium-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA2685771F7384DF003BC6CE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		EA2685781F7384DF003BC6CE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		EA26857D1F7384DF003BC6CE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EA2685801F7384DF003BC6CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		EA2685871F7384DF003BC6CE /* f4ium-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "f4ium-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA26858B1F7384DF003BC6CE /* f4ium_iosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = f4ium_iosTests.m; sourceTree = "<group>"; };
+		EA26858D1F7384DF003BC6CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EA26859A1F73870D003BC6CE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EA26859C1F738713003BC6CE /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		EA26859E1F738718003BC6CE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		EA2685A01F738737003BC6CE /* Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Controller.h; path = Classes/Controller.h; sourceTree = "<group>"; };
+		EA2685A11F738737003BC6CE /* Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Controller.m; path = Classes/Controller.m; sourceTree = "<group>"; };
+		EA2685A21F738737003BC6CE /* SOLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SOLogger.h; path = Classes/SOLogger.h; sourceTree = "<group>"; };
+		EA2685A31F738737003BC6CE /* SOLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SOLogger.m; path = Classes/SOLogger.m; sourceTree = "<group>"; };
+		EA2685A41F738737003BC6CE /* StepCollectionViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StepCollectionViewItem.h; path = Classes/StepCollectionViewItem.h; sourceTree = "<group>"; };
+		EA2685A51F738737003BC6CE /* StepCollectionViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StepCollectionViewItem.m; path = Classes/StepCollectionViewItem.m; sourceTree = "<group>"; };
+		EA2685A61F738737003BC6CE /* StepCollectionViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = StepCollectionViewItem.xib; path = Classes/StepCollectionViewItem.xib; sourceTree = "<group>"; };
+		EA2685AB1F73874D003BC6CE /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "Other Sources/main.m"; sourceTree = "<group>"; };
+		EA2685AC1F73874D003BC6CE /* SonOfGrab_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SonOfGrab_Prefix.pch; path = "Other Sources/SonOfGrab_Prefix.pch"; sourceTree = "<group>"; };
+		EA2685B01F738863003BC6CE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EA2685711F7384DF003BC6CE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA26859F1F738718003BC6CE /* Cocoa.framework in Frameworks */,
+				EA26859D1F738713003BC6CE /* Carbon.framework in Frameworks */,
+				EA26859B1F73870D003BC6CE /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA2685841F7384DF003BC6CE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EA26856B1F7384DF003BC6CE = {
+			isa = PBXGroup;
+			children = (
+				EA2685761F7384DF003BC6CE /* f4ium-ios */,
+				EA26858A1F7384DF003BC6CE /* f4ium-iosTests */,
+				EA2685751F7384DF003BC6CE /* Products */,
+				EA2685991F73870C003BC6CE /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		EA2685751F7384DF003BC6CE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EA2685741F7384DF003BC6CE /* f4ium-ios.app */,
+				EA2685871F7384DF003BC6CE /* f4ium-iosTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EA2685761F7384DF003BC6CE /* f4ium-ios */ = {
+			isa = PBXGroup;
+			children = (
+				EA2685961F738500003BC6CE /* Classes */,
+				EA2685971F738507003BC6CE /* Other Sources */,
+				EA2685981F738510003BC6CE /* Resources */,
+				EA2685771F7384DF003BC6CE /* AppDelegate.h */,
+				EA2685781F7384DF003BC6CE /* AppDelegate.m */,
+				EA26857D1F7384DF003BC6CE /* Assets.xcassets */,
+				EA2685B01F738863003BC6CE /* Info.plist */,
+				EA26857A1F7384DF003BC6CE /* Supporting Files */,
+			);
+			path = "f4ium-ios";
+			sourceTree = "<group>";
+		};
+		EA26857A1F7384DF003BC6CE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EA26858A1F7384DF003BC6CE /* f4ium-iosTests */ = {
+			isa = PBXGroup;
+			children = (
+				EA26858B1F7384DF003BC6CE /* f4ium_iosTests.m */,
+				EA26858D1F7384DF003BC6CE /* Info.plist */,
+			);
+			path = "f4ium-iosTests";
+			sourceTree = "<group>";
+		};
+		EA2685961F738500003BC6CE /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				EA2685A21F738737003BC6CE /* SOLogger.h */,
+				EA2685A31F738737003BC6CE /* SOLogger.m */,
+				EA2685A01F738737003BC6CE /* Controller.h */,
+				EA2685A11F738737003BC6CE /* Controller.m */,
+				EA2685A41F738737003BC6CE /* StepCollectionViewItem.h */,
+				EA2685A51F738737003BC6CE /* StepCollectionViewItem.m */,
+				EA2685A61F738737003BC6CE /* StepCollectionViewItem.xib */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		EA2685971F738507003BC6CE /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				EA2685AC1F73874D003BC6CE /* SonOfGrab_Prefix.pch */,
+				EA2685AB1F73874D003BC6CE /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		EA2685981F738510003BC6CE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EA26857F1F7384DF003BC6CE /* MainMenu.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		EA2685991F73870C003BC6CE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EA26859E1F738718003BC6CE /* Cocoa.framework */,
+				EA26859C1F738713003BC6CE /* Carbon.framework */,
+				EA26859A1F73870D003BC6CE /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EA2685731F7384DF003BC6CE /* f4ium-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA2685901F7384DF003BC6CE /* Build configuration list for PBXNativeTarget "f4ium-ios" */;
+			buildPhases = (
+				EA2685701F7384DF003BC6CE /* Sources */,
+				EA2685711F7384DF003BC6CE /* Frameworks */,
+				EA2685721F7384DF003BC6CE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "f4ium-ios";
+			productName = "f4ium-ios";
+			productReference = EA2685741F7384DF003BC6CE /* f4ium-ios.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EA2685861F7384DF003BC6CE /* f4ium-iosTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA2685931F7384DF003BC6CE /* Build configuration list for PBXNativeTarget "f4ium-iosTests" */;
+			buildPhases = (
+				EA2685831F7384DF003BC6CE /* Sources */,
+				EA2685841F7384DF003BC6CE /* Frameworks */,
+				EA2685851F7384DF003BC6CE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EA2685891F7384DF003BC6CE /* PBXTargetDependency */,
+			);
+			name = "f4ium-iosTests";
+			productName = "f4ium-iosTests";
+			productReference = EA2685871F7384DF003BC6CE /* f4ium-iosTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EA26856C1F7384DF003BC6CE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = "모바일개발팀";
+				TargetAttributes = {
+					EA2685731F7384DF003BC6CE = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+					EA2685861F7384DF003BC6CE = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = EA2685731F7384DF003BC6CE;
+					};
+				};
+			};
+			buildConfigurationList = EA26856F1F7384DF003BC6CE /* Build configuration list for PBXProject "f4ium-ios" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EA26856B1F7384DF003BC6CE;
+			productRefGroup = EA2685751F7384DF003BC6CE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EA2685731F7384DF003BC6CE /* f4ium-ios */,
+				EA2685861F7384DF003BC6CE /* f4ium-iosTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EA2685721F7384DF003BC6CE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA2685B11F738863003BC6CE /* Info.plist in Resources */,
+				EA2685AA1F738737003BC6CE /* StepCollectionViewItem.xib in Resources */,
+				EA26857E1F7384DF003BC6CE /* Assets.xcassets in Resources */,
+				EA2685811F7384DF003BC6CE /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA2685851F7384DF003BC6CE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EA2685701F7384DF003BC6CE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA2685A91F738737003BC6CE /* StepCollectionViewItem.m in Sources */,
+				EA2685791F7384DF003BC6CE /* AppDelegate.m in Sources */,
+				EA2685A71F738737003BC6CE /* Controller.m in Sources */,
+				EA2685AD1F73874D003BC6CE /* main.m in Sources */,
+				EA2685A81F738737003BC6CE /* SOLogger.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA2685831F7384DF003BC6CE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA26858C1F7384DF003BC6CE /* f4ium_iosTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EA2685891F7384DF003BC6CE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA2685731F7384DF003BC6CE /* f4ium-ios */;
+			targetProxy = EA2685881F7384DF003BC6CE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EA26857F1F7384DF003BC6CE /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EA2685801F7384DF003BC6CE /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EA26858E1F7384DF003BC6CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		EA26858F1F7384DF003BC6CE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		EA2685911F7384DF003BC6CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "f4ium-ios/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "kr.or.kftc.f4ium-ios";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EA2685921F7384DF003BC6CE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "f4ium-ios/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "kr.or.kftc.f4ium-ios";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		EA2685941F7384DF003BC6CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "f4ium-iosTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "kr.or.kftc.f4ium-iosTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/f4ium-ios.app/Contents/MacOS/f4ium-ios";
+			};
+			name = Debug;
+		};
+		EA2685951F7384DF003BC6CE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "f4ium-iosTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "kr.or.kftc.f4ium-iosTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/f4ium-ios.app/Contents/MacOS/f4ium-ios";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EA26856F1F7384DF003BC6CE /* Build configuration list for PBXProject "f4ium-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA26858E1F7384DF003BC6CE /* Debug */,
+				EA26858F1F7384DF003BC6CE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EA2685901F7384DF003BC6CE /* Build configuration list for PBXNativeTarget "f4ium-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA2685911F7384DF003BC6CE /* Debug */,
+				EA2685921F7384DF003BC6CE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		EA2685931F7384DF003BC6CE /* Build configuration list for PBXNativeTarget "f4ium-iosTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA2685941F7384DF003BC6CE /* Debug */,
+				EA2685951F7384DF003BC6CE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EA26856C1F7384DF003BC6CE /* Project object */;
+}
