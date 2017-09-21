@@ -620,28 +620,36 @@ NSString *kvoContext = @"SonOfGrabContext";
 
 - (IBAction)selectWindow:(id)sender {
     NSArray *selection = [arrayController selectedObjects];
-    selectedWindowID = [selection[0][kWindowIDKey] unsignedIntValue];
-    selectedWindowName = selection[0][kAppNameKey];
-    selectedWindowTitle = selection[0][kWindowTitleKey];
-    
-    NSArray *coords = [selection[0][kWindowOriginKey] componentsSeparatedByString:@"/"];
-    selectedWindowOriginX = [coords[0] intValue];
-    selectedWindowOriginY = [coords[1] intValue] + self.window.titlebarHeight;
-    NSArray *size = [selection[0][kWindowSizeKey] componentsSeparatedByString:@"*"];
-    selectedWindowSizeW = [size[0] intValue];
-    selectedWindowSizeH = [size[1] intValue];
-    
-    if (selectedWindowSizeW >= 355 && selectedWindowSizeW <= 395 &&
-        selectedWindowSizeH >= 670 && selectedWindowSizeH <= 710)
-        selectedDeviceInch = 4.7;
-    else if (selectedWindowSizeW >= 600 && selectedWindowSizeW <= 640 &&
-             selectedWindowSizeH >= 1100 && selectedWindowSizeH <= 1140)
-        selectedDeviceInch = 5.5;
-    else
-        selectedDeviceInch = 4;
-    
-    [self readDeviceID];
-    recordedLogs = [NSMutableSet new];
+    if ([selection count] > 0) {
+        selectedWindowID = [selection[0][kWindowIDKey] unsignedIntValue];
+        selectedWindowName = selection[0][kAppNameKey];
+        selectedWindowTitle = selection[0][kWindowTitleKey];
+        
+        NSArray *coords = [selection[0][kWindowOriginKey] componentsSeparatedByString:@"/"];
+        selectedWindowOriginX = [coords[0] intValue];
+        selectedWindowOriginY = [coords[1] intValue] + self.window.titlebarHeight;
+        NSArray *size = [selection[0][kWindowSizeKey] componentsSeparatedByString:@"*"];
+        selectedWindowSizeW = [size[0] intValue];
+        selectedWindowSizeH = [size[1] intValue];
+        
+        if (selectedWindowSizeW >= 355 && selectedWindowSizeW <= 395 &&
+            selectedWindowSizeH >= 670 && selectedWindowSizeH <= 710)
+            selectedDeviceInch = 4.7;
+        else if (selectedWindowSizeW >= 600 && selectedWindowSizeW <= 640 &&
+                 selectedWindowSizeH >= 1100 && selectedWindowSizeH <= 1140)
+            selectedDeviceInch = 5.5;
+        else
+            selectedDeviceInch = 4;
+        
+        [self readDeviceID];
+        recordedLogs = [NSMutableSet new];
+    } else {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"알림"];
+        [alert setInformativeText:@"Window List의 테스트하고자 하는 Simulator를 선택해주세요."];
+        [alert addButtonWithTitle:@"확인"];
+        [alert runModal];
+    }
 }
 
 - (IBAction)grabScreenShot:(id)sender {
