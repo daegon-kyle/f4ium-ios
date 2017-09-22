@@ -460,7 +460,7 @@ NSString *kvoContext = @"f4ium-iosContext";
             if (!dragging)
                 cmdCoordinate = [NSString stringWithFormat:@"(new TouchAction(driver)).tap(%d, %d).perform();", endX, endY];
             else
-                cmdCoordinate = [NSString stringWithFormat:@"(new TouchAction(driver)).press(%d, %d).moveTo(%d, %d).release().perform();", startX, startY, endX-startX, endY-startX];
+                cmdCoordinate = [NSString stringWithFormat:@"(new TouchAction(driver)).press(%d, %d).moveTo(%d, %d).release().perform();", startX, startY, endX-startX, endY-startY];
             NSLog(@"%@", cmdCoordinate);
             
             NSString *cmdID = [self readLogFile];
@@ -538,7 +538,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     float y = H - NSEvent.mouseLocation.y - selectedWindowOriginY;
     
     // 좌표가 창 영역 안에 있을 때에만
-    if (x < 0 || x > selectedWindowSizeW || y < 0 || y > selectedWindowSizeH)
+    if (x > selectedWindowSizeW || y > selectedWindowSizeH)
         return YES;
     
     return NO;
@@ -554,9 +554,25 @@ NSString *kvoContext = @"f4ium-iosContext";
 }
 
 - (int)getMouseY {
-    NSRect e = [[NSScreen mainScreen] frame];
-    int H = (int)e.size.height;
-    float y = H - NSEvent.mouseLocation.y - selectedWindowOriginY;
+    NSScreen *mainScreen = [NSScreen mainScreen];
+    int H = 0;
+    float y = 0.0;
+    
+    if (selectedWindowOriginX < 0 || selectedWindowOriginY < 0) {
+        NSScreen *subScreen;
+        if ([NSScreen screens][0] == mainScreen)
+            subScreen = [NSScreen screens][1];
+        else
+            subScreen = [NSScreen screens][0];
+        
+        NSRect subScreenRect = [subScreen frame];
+        H = (int)subScreenRect.size.height;
+    } else {
+        NSRect mainScreenRect = [mainScreen frame];
+        H = (int)mainScreenRect.size.height;
+    }
+    
+    y = H - NSEvent.mouseLocation.y - selectedWindowOriginY;
     
     if (selectedDeviceInch != 5.5)
         return y;
