@@ -210,7 +210,7 @@ void WindowListApplierFunction(const void *inputDictionary, void *context) {
     NSArray * sortedSelection = [selection sortedArrayUsingDescriptors:sortDescriptors];
     
     // Now we Collect the CGWindowIDs from the sorted selection
-    int count = [sortedSelection count];
+    unsigned long count = sortedSelection.count;
     const void *windowIDs[count];
     int i = 0;
     for(NSMutableDictionary *entry in sortedSelection)
@@ -417,7 +417,7 @@ NSString *kvoContext = @"SonOfGrabContext";
         [alert setMessageText:@"\'손쉬운 사용\' 권한 확인"];
         [alert setInformativeText:@"[시스템 환경설정]➝[보안 및 개인 정보 보호]➝[개인 정보 보호]➝[손쉬운 사용] 에서 이 앱의 활성화 필요합니다."];
         [alert addButtonWithTitle:@"확인"];
-        [alert setAlertStyle:NSWarningAlertStyle];
+        [alert setAlertStyle:NSAlertStyleWarning];
         [alert runModal];
         
     } else {
@@ -598,6 +598,55 @@ NSString *kvoContext = @"SonOfGrabContext";
 
 #pragma mark Control Actions
 
+- (IBAction)exportToJUnitCode:(id)sender {
+    if (cmdList.count == 0) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"알림"];
+        [alert setInformativeText:@"내보내기할 명령어가 없습니다."];
+        [alert addButtonWithTitle:@"확인"];
+        [alert setAlertStyle:NSAlertStyleWarning];
+        [alert runModal];
+        
+    } else {
+        NSSavePanel* savePanel = NSSavePanel.savePanel;
+        [savePanel setAllowedFileTypes:@[@"java"]];
+        [savePanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
+            if (result == NSFileHandlingPanelOKButton) {
+                NSMutableString *fileContent = [NSMutableString new];
+                
+                for (int i = 0; i < collectionView.subviews.count; i++) {
+                    [fileContent appendString:[NSString stringWithFormat:@"// Step #%d\n", i]];
+                    
+                    StepCollectionViewItem *stepItem = (StepCollectionViewItem *)[collectionView itemAtIndex:i];
+                    if (stepItem.radioCoordinate.state == NSOnState) {
+                        if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
+                            [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
+                            [fileContent appendString:@"\n"];
+                        }
+                        if (stepItem.tfCmdID.stringValue.length > 0) {
+                            [fileContent appendString:@"// "];
+                            [fileContent appendString:stepItem.tfCmdID.stringValue];
+                            [fileContent appendString:@"\n"];
+                        }
+                    } else {
+                        if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
+                            [fileContent appendString:@"// "];
+                            [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
+                            [fileContent appendString:@"\n"];
+                        }
+                        if (stepItem.tfCmdID.stringValue.length > 0) {
+                            [fileContent appendString:stepItem.tfCmdID.stringValue];
+                            [fileContent appendString:@"\n"];
+                        }
+                    }
+                }
+                
+                [fileContent writeToURL:savePanel.URL atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
+            }
+        }];
+    }
+}
+
 - (IBAction)toggleFramingEffects:(id)sender {
     imageOptions = ChangeBits(imageOptions, kCGWindowImageBoundsIgnoreFraming, [sender intValue] == NSOnState);
     [self updateImageWithSelection];
@@ -646,7 +695,7 @@ NSString *kvoContext = @"SonOfGrabContext";
     } else {
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:@"알림"];
-        [alert setInformativeText:@"Window List의 테스트하고자 하는 Simulator를 선택해주세요."];
+        [alert setInformativeText:@"Window List에서 테스트하고자 하는 Simulator를 선택해주세요."];
         [alert addButtonWithTitle:@"확인"];
         [alert runModal];
     }
