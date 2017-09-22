@@ -376,7 +376,7 @@ enum {
     return kCGWindowListOptionIncludingWindow;
 }
 
-NSString *kvoContext = @"SonOfGrabContext";
+NSString *kvoContext = @"f4ium-iosContext";
 - (void)awakeFromNib {
     // Set the initial list options to match the UI.
     listOptions = kCGWindowListOptionOnScreenOnly;
