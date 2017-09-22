@@ -555,10 +555,12 @@ NSString *kvoContext = @"f4ium-iosContext";
 
 - (int)getMouseY {
     NSScreen *mainScreen = [NSScreen mainScreen];
+    NSRect mainScreenRect = [mainScreen frame];
     int H = 0;
     float y = 0.0;
     
-    if (selectedWindowOriginX < 0 || selectedWindowOriginY < 0) {
+    if (selectedWindowOriginX < 0 || selectedWindowOriginY < 0 ||
+        selectedWindowOriginX > mainScreenRect.size.width || selectedWindowOriginY > mainScreenRect.size.height) {
         NSScreen *subScreen;
         if ([NSScreen screens][0] == mainScreen)
             subScreen = [NSScreen screens][1];
@@ -567,10 +569,8 @@ NSString *kvoContext = @"f4ium-iosContext";
         
         NSRect subScreenRect = [subScreen frame];
         H = (int)subScreenRect.size.height;
-    } else {
-        NSRect mainScreenRect = [mainScreen frame];
+    } else
         H = (int)mainScreenRect.size.height;
-    }
     
     y = H - NSEvent.mouseLocation.y - selectedWindowOriginY;
     
