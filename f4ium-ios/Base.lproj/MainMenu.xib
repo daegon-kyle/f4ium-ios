@@ -457,7 +457,7 @@
                             <rect key="frame" x="1" y="275" width="798" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="UYm-5C-CtO">
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="UYm-5C-CtO">
                             <rect key="frame" x="783" y="1" width="16" height="288"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>

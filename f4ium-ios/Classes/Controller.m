@@ -631,9 +631,12 @@ NSString *kvoContext = @"f4ium-iosContext";
                 NSMutableString *fileContent = [NSMutableString new];
                 
                 for (int i = 0; i < collectionView.subviews.count; i++) {
-                    [fileContent appendString:[NSString stringWithFormat:@"// Step #%d\n", i]];
-                    
                     StepCollectionViewItem *stepItem = (StepCollectionViewItem *)[collectionView itemAtIndex:i];
+                    
+                    [fileContent appendString:[NSString stringWithFormat:@"// Step #%d\n", i]];
+                    if (stepItem.tfComment.stringValue.length > 0)
+                        [fileContent appendString:[NSString stringWithFormat:@"// %@\n", stepItem.tfComment.stringValue]];
+                    
                     if (stepItem.radioCoordinate.state == NSOnState) {
                         if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
                             [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
@@ -657,7 +660,16 @@ NSString *kvoContext = @"f4ium-iosContext";
                     }
                 }
                 
-                [fileContent writeToURL:savePanel.URL atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
+                NSError *error;
+                BOOL success = [fileContent writeToURL:savePanel.URL atomically:NO encoding:NSUTF8StringEncoding error:&error];
+                if (!success) {
+                    NSAlert *alert = [[NSAlert alloc] init];
+                    [alert setMessageText:@"알림"];
+                    [alert setInformativeText:[NSString stringWithFormat:@"%@", error.localizedDescription]];
+                    [alert addButtonWithTitle:@"확인"];
+                    [alert setAlertStyle:NSAlertStyleWarning];
+                    [alert runModal];
+                }
             }
         }];
     }

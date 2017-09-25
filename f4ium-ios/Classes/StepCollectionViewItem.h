@@ -16,5 +16,6 @@
 @property (weak) IBOutlet NSButton *radioID;
 @property (weak) IBOutlet NSTextField *tfCmdCooridatenate;
 @property (weak) IBOutlet NSTextField *tfCmdID;
+@property (weak) IBOutlet NSTextField *tfComment;
 
 @end

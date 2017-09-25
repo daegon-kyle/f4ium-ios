@@ -13,7 +13,7 @@
 @end
 
 @implementation StepCollectionViewItem
-@synthesize txtTitle, imgView, radioCoordinate, radioID, tfCmdCooridatenate, tfCmdID;
+@synthesize txtTitle, imgView, radioCoordinate, radioID, tfCmdCooridatenate, tfCmdID, tfComment;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -29,6 +29,8 @@
         [imgView setImage:[representedObject valueForKey:@"image"]];
         [tfCmdCooridatenate setStringValue:[representedObject valueForKey:@"cmdCoordinate"]];
         [tfCmdID setStringValue:[representedObject valueForKey:@"cmdID"]];
+        if ([representedObject valueForKey:@"comment"] != nil)
+            [tfComment setStringValue:[representedObject valueForKey:@"commment"]];
         
         if (tfCmdID.stringValue.length == 0)
             [self clickRadioCoordinate:nil];
