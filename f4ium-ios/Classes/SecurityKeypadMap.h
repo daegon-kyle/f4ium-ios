@@ -10,4 +10,9 @@
 
 @interface SecurityKeypadMap : NSObject
 
+@property NSDictionary *keyMap;
+
++ (id)sharedSecurityKeyMap;
+- (NSString *)retrieveID:(NSString *)key;
+
 @end

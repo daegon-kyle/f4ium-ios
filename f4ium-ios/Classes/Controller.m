@@ -9,6 +9,7 @@
 #import "Controller.h"
 #import "StepCollectionViewItem.h"
 #import "SOLogger.h"
+#import "SecurityKeypadMap.h"
 #import <AppKit/NSClickGestureRecognizer.h>
 
 extern SOLogger *gLogger;
@@ -733,6 +734,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     [input setStringValue:@""];
     [alert setAccessoryView:input];
     NSInteger button = [alert runModal];
+    
     if (button == NSAlertFirstButtonReturn) {
         NSMutableDictionary *cmd = [NSMutableDictionary new];
         NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
@@ -747,11 +749,130 @@ NSString *kvoContext = @"f4ium-iosContext";
         [cmdList addObject:cmd];
         
         [self updateCommandList];
-    } else  {
     }
 }
 
 - (IBAction)generateSecurityKeypadInput:(id)sender {
+    SecurityKeypadMap *secKeyMap = [SecurityKeypadMap sharedSecurityKeyMap];
+    
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:@"입력할 보안 키패드 문자열을 입력해주세요 (한글 입력 금지)."];
+    [alert addButtonWithTitle:@"확인"];
+    [alert addButtonWithTitle:@"취소"];
+    
+    NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 280, 24)];
+    [input setStringValue:@""];
+    [alert setAccessoryView:input];
+    NSInteger button = [alert runModal];
+    
+    if (button == NSAlertFirstButtonReturn) {
+        for (int i = 0; i < input.stringValue.length; i++) {
+            NSString *substr = [input.stringValue substringWithRange:NSMakeRange(i, 1)];
+            unichar chr = [input.stringValue characterAtIndex:i];
+            
+            if ((chr >= 'a' && chr <= 'z') || (chr >= '0' && chr <= '9')) {
+                NSMutableDictionary *cmd = [NSMutableDictionary new];
+                NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                NSString *cmdCoordinate = @"";
+                NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", [secKeyMap retrieveID:substr]];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+            } else if (chr >= 'A' && chr <= 'Z') {
+                NSMutableDictionary *cmd = [NSMutableDictionary new];
+                NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                NSString *cmdCoordinate = @"";
+                NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"대소문자 변경"];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+                cmd = [NSMutableDictionary new];
+                cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                cmdCoordinate = @"";
+                cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", [secKeyMap retrieveID:substr]];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+                cmd = [NSMutableDictionary new];
+                cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                cmdCoordinate = @"";
+                cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"대소문자 변경"];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+            } else { // 특수문자
+                NSMutableDictionary *cmd = [NSMutableDictionary new];
+                NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                NSString *cmdCoordinate = @"";
+                NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"특수문자 변경"];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+                cmd = [NSMutableDictionary new];
+                cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                cmdCoordinate = @"";
+                cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", [secKeyMap retrieveID:substr]];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+                cmd = [NSMutableDictionary new];
+                cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                cmdCoordinate = @"";
+                cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"특수문자 변경"];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+            }
+        }
+        
+        NSMutableDictionary *cmd = [NSMutableDictionary new];
+        NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        NSString *cmdCoordinate = @"";
+        NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"입력완료"];
+        NSLog(@"%@", cmdID);
+        
+        [cmd setValue:outputView.image forKey:@"image"];
+        [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+        [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+        [cmd setValue:cmdID forKey:@"cmdID"];
+        [cmdList addObject:cmd];
+        
+        [self updateCommandList];
+    }
 }
 
 - (IBAction)generrateSystemKeypadInput:(id)sender {
