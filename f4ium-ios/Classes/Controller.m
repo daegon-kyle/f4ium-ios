@@ -9,6 +9,7 @@
 #import "Controller.h"
 #import "StepCollectionViewItem.h"
 #import "SOLogger.h"
+#import <AppKit/NSClickGestureRecognizer.h>
 
 extern SOLogger *gLogger;
 
@@ -484,7 +485,6 @@ NSString *kvoContext = @"f4ium-iosContext";
         [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskLeftMouseDragged handler:lDraggedEvent];
         [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskLeftMouseUp handler:lUpEvent];
     }
-    
     [collectionView setItemPrototype:[StepCollectionViewItem new]];
     [collectionView.enclosingScrollView setHasHorizontalScroller:NO];
     [collectionView.enclosingScrollView setHasVerticalScroller:YES];
@@ -493,11 +493,40 @@ NSString *kvoContext = @"f4ium-iosContext";
 
 - (void)updateCommandList {
     [collectionView setContent:cmdList];
+    NSClickGestureRecognizer *click = [[NSClickGestureRecognizer alloc] init];
+    click.target = self;
+    click.numberOfClicksRequired = 1;
+    click.action = @selector(deleteCommand:);
+    NSButton *cancelBtn = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).cancelBtn;
+    [cancelBtn addGestureRecognizer:click];
     
     if (cmdList.count > 0) {
         NSRect rect = collectionView.enclosingScrollView.frame;
         rect.origin.y += (cmdList.count-1) * rect.size.height;
         [collectionView scrollRectToVisible:rect];
+    }
+}
+
+- (void)deleteCommand:(NSClickGestureRecognizer *)sender {
+    int tag = (int)[(NSButton*)sender.view tag];
+    int index = tag-1;
+    NSInteger totalCmdCount = [cmdList count];
+    
+    if (totalCmdCount > index) {
+        if (totalCmdCount == tag) {
+            [cmdList removeObjectAtIndex:totalCmdCount-1];
+        } else {
+            for (int i = index; i < totalCmdCount-1; i++) {
+                NSMutableDictionary *cmd = [cmdList objectAtIndex:i+1];
+                [cmd setValue:[NSString stringWithFormat:@"%d", i+1] forKey:@"cmdNumber"];
+                [cmdList replaceObjectAtIndex:i withObject:cmd];
+                
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).cancelBtn setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", i+1]];
+            }
+            [cmdList removeObjectAtIndex:totalCmdCount-1];
+        }
+        [collectionView setContent:cmdList];
     }
 }
 
