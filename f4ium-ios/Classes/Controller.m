@@ -9,6 +9,7 @@
 #import "Controller.h"
 #import "StepCollectionViewItem.h"
 #import "SOLogger.h"
+#import <AppKit/NSClickGestureRecognizer.h>
 
 extern SOLogger *gLogger;
 
@@ -64,6 +65,7 @@ extern SOLogger *gLogger;
     float selectedDeviceInch;
     NSString *selectedDeviceID;
     NSMutableSet *recordedLogs;
+    NSString *lastRetrievedID;
     
     NSMutableArray *cmdList;
 }
@@ -210,7 +212,7 @@ void WindowListApplierFunction(const void *inputDictionary, void *context) {
     NSArray * sortedSelection = [selection sortedArrayUsingDescriptors:sortDescriptors];
     
     // Now we Collect the CGWindowIDs from the sorted selection
-    int count = [sortedSelection count];
+    unsigned long count = sortedSelection.count;
     const void *windowIDs[count];
     int i = 0;
     for(NSMutableDictionary *entry in sortedSelection)
@@ -334,6 +336,7 @@ void WindowListApplierFunction(const void *inputDictionary, void *context) {
             ids = [result substringFromIndex:idHeader.location + idHeader.length];
         else
             ids = [NSString stringWithFormat:@"%@,%@", ids, [result substringFromIndex:idHeader.location + idHeader.length]];
+        lastRetrievedID = ids;
     }];
     
     return ids;
@@ -376,7 +379,7 @@ enum {
     return kCGWindowListOptionIncludingWindow;
 }
 
-NSString *kvoContext = @"SonOfGrabContext";
+NSString *kvoContext = @"f4ium-iosContext";
 - (void)awakeFromNib {
     // Set the initial list options to match the UI.
     listOptions = kCGWindowListOptionOnScreenOnly;
@@ -417,7 +420,7 @@ NSString *kvoContext = @"SonOfGrabContext";
         [alert setMessageText:@"\'손쉬운 사용\' 권한 확인"];
         [alert setInformativeText:@"[시스템 환경설정]➝[보안 및 개인 정보 보호]➝[개인 정보 보호]➝[손쉬운 사용] 에서 이 앱의 활성화 필요합니다."];
         [alert addButtonWithTitle:@"확인"];
-        [alert setAlertStyle:NSWarningAlertStyle];
+        [alert setAlertStyle:NSAlertStyleWarning];
         [alert runModal];
         
     } else {
@@ -460,7 +463,7 @@ NSString *kvoContext = @"SonOfGrabContext";
             if (!dragging)
                 cmdCoordinate = [NSString stringWithFormat:@"(new TouchAction(driver)).tap(%d, %d).perform();", endX, endY];
             else
-                cmdCoordinate = [NSString stringWithFormat:@"(new TouchAction(driver)).press(%d, %d).moveTo(%d, %d).release().perform();", startX, startY, endX-startX, endY-startX];
+                cmdCoordinate = [NSString stringWithFormat:@"(new TouchAction(driver)).press(%d, %d).moveTo(%d, %d).release().perform();", startX, startY, endX-startX, endY-startY];
             NSLog(@"%@", cmdCoordinate);
             
             NSString *cmdID = [self readLogFile];
@@ -484,7 +487,6 @@ NSString *kvoContext = @"SonOfGrabContext";
         [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskLeftMouseDragged handler:lDraggedEvent];
         [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskLeftMouseUp handler:lUpEvent];
     }
-    
     [collectionView setItemPrototype:[StepCollectionViewItem new]];
     [collectionView.enclosingScrollView setHasHorizontalScroller:NO];
     [collectionView.enclosingScrollView setHasVerticalScroller:YES];
@@ -493,11 +495,40 @@ NSString *kvoContext = @"SonOfGrabContext";
 
 - (void)updateCommandList {
     [collectionView setContent:cmdList];
+    NSClickGestureRecognizer *click = [[NSClickGestureRecognizer alloc] init];
+    click.target = self;
+    click.numberOfClicksRequired = 1;
+    click.action = @selector(deleteCommand:);
+    NSButton *cancelBtn = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).cancelBtn;
+    [cancelBtn addGestureRecognizer:click];
     
     if (cmdList.count > 0) {
         NSRect rect = collectionView.enclosingScrollView.frame;
         rect.origin.y += (cmdList.count-1) * rect.size.height;
         [collectionView scrollRectToVisible:rect];
+    }
+}
+
+- (void)deleteCommand:(NSClickGestureRecognizer *)sender {
+    int tag = (int)[(NSButton*)sender.view tag];
+    int index = tag-1;
+    NSInteger totalCmdCount = [cmdList count];
+    
+    if (totalCmdCount > index) {
+        if (totalCmdCount == tag) {
+            [cmdList removeObjectAtIndex:totalCmdCount-1];
+        } else {
+            for (int i = index; i < totalCmdCount-1; i++) {
+                NSMutableDictionary *cmd = [cmdList objectAtIndex:i+1];
+                [cmd setValue:[NSString stringWithFormat:@"%d", i+1] forKey:@"cmdNumber"];
+                [cmdList replaceObjectAtIndex:i withObject:cmd];
+                
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).cancelBtn setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", i+1]];
+            }
+            [cmdList removeObjectAtIndex:totalCmdCount-1];
+        }
+        [collectionView setContent:cmdList];
     }
 }
 
@@ -538,7 +569,7 @@ NSString *kvoContext = @"SonOfGrabContext";
     float y = H - NSEvent.mouseLocation.y - selectedWindowOriginY;
     
     // 좌표가 창 영역 안에 있을 때에만
-    if (x < 0 || x > selectedWindowSizeW || y < 0 || y > selectedWindowSizeH)
+    if (x > selectedWindowSizeW || y > selectedWindowSizeH)
         return YES;
     
     return NO;
@@ -554,9 +585,25 @@ NSString *kvoContext = @"SonOfGrabContext";
 }
 
 - (int)getMouseY {
-    NSRect e = [[NSScreen mainScreen] frame];
-    int H = (int)e.size.height;
-    float y = H - NSEvent.mouseLocation.y - selectedWindowOriginY;
+    NSScreen *mainScreen = [NSScreen mainScreen];
+    NSRect mainScreenRect = [mainScreen frame];
+    int H = 0;
+    float y = 0.0;
+    
+    if (selectedWindowOriginX < 0 || selectedWindowOriginY < 0 ||
+        selectedWindowOriginX > mainScreenRect.size.width || selectedWindowOriginY > mainScreenRect.size.height) {
+        NSScreen *subScreen;
+        if ([NSScreen screens][0] == mainScreen)
+            subScreen = [NSScreen screens][1];
+        else
+            subScreen = [NSScreen screens][0];
+        
+        NSRect subScreenRect = [subScreen frame];
+        H = (int)subScreenRect.size.height;
+    } else
+        H = (int)mainScreenRect.size.height;
+    
+    y = H - NSEvent.mouseLocation.y - selectedWindowOriginY;
     
     if (selectedDeviceInch != 5.5)
         return y;
@@ -598,6 +645,118 @@ NSString *kvoContext = @"SonOfGrabContext";
 
 #pragma mark Control Actions
 
+- (IBAction)exportToJUnitCode:(id)sender {
+    if (cmdList.count == 0) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"알림"];
+        [alert setInformativeText:@"내보내기할 명령어가 없습니다."];
+        [alert addButtonWithTitle:@"확인"];
+        [alert setAlertStyle:NSAlertStyleWarning];
+        [alert runModal];
+        
+    } else {
+        NSSavePanel* savePanel = NSSavePanel.savePanel;
+        [savePanel setAllowedFileTypes:@[@"java"]];
+        [savePanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
+            if (result == NSFileHandlingPanelOKButton) {
+                NSMutableString *fileContent = [NSMutableString new];
+                
+                for (int i = 0; i < collectionView.subviews.count; i++) {
+                    StepCollectionViewItem *stepItem = (StepCollectionViewItem *)[collectionView itemAtIndex:i];
+                    
+                    [fileContent appendString:[NSString stringWithFormat:@"// Step #%d\n", i]];
+                    if (stepItem.tfComment.stringValue.length > 0)
+                        [fileContent appendString:[NSString stringWithFormat:@"// %@\n", stepItem.tfComment.stringValue]];
+                    
+                    if (stepItem.radioCoordinate.state == NSOnState) {
+                        if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
+                            [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
+                            [fileContent appendString:@"\n"];
+                        }
+                        if (stepItem.tfCmdID.stringValue.length > 0) {
+                            [fileContent appendString:@"// "];
+                            [fileContent appendString:stepItem.tfCmdID.stringValue];
+                            [fileContent appendString:@"\n"];
+                        }
+                    } else {
+                        if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
+                            [fileContent appendString:@"// "];
+                            [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
+                            [fileContent appendString:@"\n"];
+                        }
+                        if (stepItem.tfCmdID.stringValue.length > 0) {
+                            [fileContent appendString:stepItem.tfCmdID.stringValue];
+                            [fileContent appendString:@"\n"];
+                        }
+                    }
+                }
+                
+                NSError *error;
+                BOOL success = [fileContent writeToURL:savePanel.URL atomically:NO encoding:NSUTF8StringEncoding error:&error];
+                if (!success) {
+                    NSAlert *alert = [[NSAlert alloc] init];
+                    [alert setMessageText:@"알림"];
+                    [alert setInformativeText:[NSString stringWithFormat:@"%@", error.localizedDescription]];
+                    [alert addButtonWithTitle:@"확인"];
+                    [alert setAlertStyle:NSAlertStyleWarning];
+                    [alert runModal];
+                }
+            }
+        }];
+    }
+}
+
+- (BOOL)checkLastRetrievedID {
+    if (lastRetrievedID != nil)
+        return YES;
+    
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:@"알림"];
+    [alert setInformativeText:@"문자열이 입력될 앱 내 텍스트 상자를 반드시 선택해주세요."];
+    [alert addButtonWithTitle:@"확인"];
+    [alert setAlertStyle:NSAlertStyleWarning];
+    [alert runModal];
+    return NO;
+}
+
+- (IBAction)generateNormalKeypadInput:(id)sender {
+    if (![self checkLastRetrievedID])
+        return;
+    
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:@"입력할 일반 키패드 문자열을 입력해주세요."];
+    [alert setInformativeText:[NSString stringWithFormat:@"%@%@", @"현재 마지막으로 감지한 앱 내 항목: ", lastRetrievedID]];
+    [alert addButtonWithTitle:@"확인"];
+    [alert addButtonWithTitle:@"취소"];
+    
+    NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 280, 24)];
+    [input setStringValue:@""];
+    [alert setAccessoryView:input];
+    NSInteger button = [alert runModal];
+    if (button == NSAlertFirstButtonReturn) {
+        NSMutableDictionary *cmd = [NSMutableDictionary new];
+        NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        NSString *cmdCoordinate = @"";
+        NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).sendKeys(\"%@\");", lastRetrievedID, input.stringValue];
+        NSLog(@"%@", cmdID);
+        
+        [cmd setValue:outputView.image forKey:@"image"];
+        [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+        [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+        [cmd setValue:cmdID forKey:@"cmdID"];
+        [cmdList addObject:cmd];
+        
+        [self updateCommandList];
+    } else  {
+    }
+}
+
+- (IBAction)generateSecurityKeypadInput:(id)sender {
+}
+
+- (IBAction)generrateSystemKeypadInput:(id)sender {
+}
+
 - (IBAction)toggleFramingEffects:(id)sender {
     imageOptions = ChangeBits(imageOptions, kCGWindowImageBoundsIgnoreFraming, [sender intValue] == NSOnState);
     [self updateImageWithSelection];
@@ -620,28 +779,36 @@ NSString *kvoContext = @"SonOfGrabContext";
 
 - (IBAction)selectWindow:(id)sender {
     NSArray *selection = [arrayController selectedObjects];
-    selectedWindowID = [selection[0][kWindowIDKey] unsignedIntValue];
-    selectedWindowName = selection[0][kAppNameKey];
-    selectedWindowTitle = selection[0][kWindowTitleKey];
-    
-    NSArray *coords = [selection[0][kWindowOriginKey] componentsSeparatedByString:@"/"];
-    selectedWindowOriginX = [coords[0] intValue];
-    selectedWindowOriginY = [coords[1] intValue] + self.window.titlebarHeight;
-    NSArray *size = [selection[0][kWindowSizeKey] componentsSeparatedByString:@"*"];
-    selectedWindowSizeW = [size[0] intValue];
-    selectedWindowSizeH = [size[1] intValue];
-    
-    if (selectedWindowSizeW >= 355 && selectedWindowSizeW <= 395 &&
-        selectedWindowSizeH >= 670 && selectedWindowSizeH <= 710)
-        selectedDeviceInch = 4.7;
-    else if (selectedWindowSizeW >= 600 && selectedWindowSizeW <= 640 &&
-             selectedWindowSizeH >= 1100 && selectedWindowSizeH <= 1140)
-        selectedDeviceInch = 5.5;
-    else
-        selectedDeviceInch = 4;
-    
-    [self readDeviceID];
-    recordedLogs = [NSMutableSet new];
+    if ([selection count] > 0) {
+        selectedWindowID = [selection[0][kWindowIDKey] unsignedIntValue];
+        selectedWindowName = selection[0][kAppNameKey];
+        selectedWindowTitle = selection[0][kWindowTitleKey];
+        
+        NSArray *coords = [selection[0][kWindowOriginKey] componentsSeparatedByString:@"/"];
+        selectedWindowOriginX = [coords[0] intValue];
+        selectedWindowOriginY = [coords[1] intValue] + self.window.titlebarHeight;
+        NSArray *size = [selection[0][kWindowSizeKey] componentsSeparatedByString:@"*"];
+        selectedWindowSizeW = [size[0] intValue];
+        selectedWindowSizeH = [size[1] intValue];
+        
+        if (selectedWindowSizeW >= 355 && selectedWindowSizeW <= 395 &&
+            selectedWindowSizeH >= 670 && selectedWindowSizeH <= 710)
+            selectedDeviceInch = 4.7;
+        else if (selectedWindowSizeW >= 600 && selectedWindowSizeW <= 640 &&
+                 selectedWindowSizeH >= 1100 && selectedWindowSizeH <= 1140)
+            selectedDeviceInch = 5.5;
+        else
+            selectedDeviceInch = 4;
+        
+        [self readDeviceID];
+        recordedLogs = [NSMutableSet new];
+    } else {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"알림"];
+        [alert setInformativeText:@"Window List에서 테스트하고자 하는 Simulator를 선택해주세요."];
+        [alert addButtonWithTitle:@"확인"];
+        [alert runModal];
+    }
 }
 
 - (IBAction)grabScreenShot:(id)sender {
