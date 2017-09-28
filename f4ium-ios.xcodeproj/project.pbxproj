@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8DA240BF1F7CB80A0082D90F /* SecurityKeypadMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA240BE1F7CB80A0082D90F /* SecurityKeypadMap.m */; };
 		EA2685791F7384DF003BC6CE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2685781F7384DF003BC6CE /* AppDelegate.m */; };
 		EA26857E1F7384DF003BC6CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA26857D1F7384DF003BC6CE /* Assets.xcassets */; };
 		EA2685811F7384DF003BC6CE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA26857F1F7384DF003BC6CE /* MainMenu.xib */; };
@@ -33,6 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8DA240BD1F7CB80A0082D90F /* SecurityKeypadMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SecurityKeypadMap.h; path = Classes/SecurityKeypadMap.h; sourceTree = "<group>"; };
+		8DA240BE1F7CB80A0082D90F /* SecurityKeypadMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SecurityKeypadMap.m; path = Classes/SecurityKeypadMap.m; sourceTree = "<group>"; };
 		EA2685741F7384DF003BC6CE /* f4ium-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "f4ium-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA2685771F7384DF003BC6CE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EA2685781F7384DF003BC6CE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -137,6 +140,8 @@
 				EA2685A41F738737003BC6CE /* StepCollectionViewItem.h */,
 				EA2685A51F738737003BC6CE /* StepCollectionViewItem.m */,
 				EA2685A61F738737003BC6CE /* StepCollectionViewItem.xib */,
+				8DA240BD1F7CB80A0082D90F /* SecurityKeypadMap.h */,
+				8DA240BE1F7CB80A0082D90F /* SecurityKeypadMap.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -273,6 +278,7 @@
 			files = (
 				EA2685A91F738737003BC6CE /* StepCollectionViewItem.m in Sources */,
 				EA2685791F7384DF003BC6CE /* AppDelegate.m in Sources */,
+				8DA240BF1F7CB80A0082D90F /* SecurityKeypadMap.m in Sources */,
 				EA2685A71F738737003BC6CE /* Controller.m in Sources */,
 				EA2685AD1F73874D003BC6CE /* main.m in Sources */,
 				EA2685A81F738737003BC6CE /* SOLogger.m in Sources */,
@@ -465,6 +471,7 @@
 				EA2685921F7384DF003BC6CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EA2685931F7384DF003BC6CE /* Build configuration list for PBXNativeTarget "f4ium-iosTests" */ = {
 			isa = XCConfigurationList;
@@ -473,6 +480,7 @@
 				EA2685951F7384DF003BC6CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

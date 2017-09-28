@@ -64,6 +64,7 @@ extern SOLogger *gLogger;
     float selectedDeviceInch;
     NSString *selectedDeviceID;
     NSMutableSet *recordedLogs;
+    NSString *lastRetrievedID;
     
     NSMutableArray *cmdList;
 }
@@ -334,6 +335,7 @@ void WindowListApplierFunction(const void *inputDictionary, void *context) {
             ids = [result substringFromIndex:idHeader.location + idHeader.length];
         else
             ids = [NSString stringWithFormat:@"%@,%@", ids, [result substringFromIndex:idHeader.location + idHeader.length]];
+        lastRetrievedID = ids;
     }];
     
     return ids;
@@ -673,6 +675,57 @@ NSString *kvoContext = @"f4ium-iosContext";
             }
         }];
     }
+}
+
+- (BOOL)checkLastRetrievedID {
+    if (lastRetrievedID != nil)
+        return YES;
+    
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:@"알림"];
+    [alert setInformativeText:@"문자열이 입력될 앱 내 텍스트 상자를 반드시 선택해주세요."];
+    [alert addButtonWithTitle:@"확인"];
+    [alert setAlertStyle:NSAlertStyleWarning];
+    [alert runModal];
+    return NO;
+}
+
+- (IBAction)generateNormalKeypadInput:(id)sender {
+    if (![self checkLastRetrievedID])
+        return;
+    
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:@"입력할 일반 키패드 문자열을 입력해주세요."];
+    [alert setInformativeText:[NSString stringWithFormat:@"%@%@", @"현재 마지막으로 감지한 앱 내 항목: ", lastRetrievedID]];
+    [alert addButtonWithTitle:@"확인"];
+    [alert addButtonWithTitle:@"취소"];
+    
+    NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 280, 24)];
+    [input setStringValue:@""];
+    [alert setAccessoryView:input];
+    NSInteger button = [alert runModal];
+    if (button == NSAlertFirstButtonReturn) {
+        NSMutableDictionary *cmd = [NSMutableDictionary new];
+        NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        NSString *cmdCoordinate = @"";
+        NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).sendKeys(\"%@\");", lastRetrievedID, input.stringValue];
+        NSLog(@"%@", cmdID);
+        
+        [cmd setValue:outputView.image forKey:@"image"];
+        [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+        [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+        [cmd setValue:cmdID forKey:@"cmdID"];
+        [cmdList addObject:cmd];
+        
+        [self updateCommandList];
+    } else  {
+    }
+}
+
+- (IBAction)generateSecurityKeypadInput:(id)sender {
+}
+
+- (IBAction)generrateSystemKeypadInput:(id)sender {
 }
 
 - (IBAction)toggleFramingEffects:(id)sender {

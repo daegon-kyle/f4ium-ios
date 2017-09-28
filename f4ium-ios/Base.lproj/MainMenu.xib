@@ -204,6 +204,30 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Keypad Actions" id="mQ2-4g-OyA" userLabel="Keyboard Actions">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Keypad Actions" id="HEb-XN-1Ex">
+                        <items>
+                            <menuItem title="Normal Keypad Input" keyEquivalent="i" id="74E-XT-YeA">
+                                <connections>
+                                    <action selector="generateNormalKeypadInput:" target="429" id="NOY-5a-v5C"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Security Keypad Input" keyEquivalent="i" id="rp7-fu-AQt">
+                                <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="generateSecurityKeypadInput:" target="429" id="G8Q-YC-qTV"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="System Keypad Input" keyEquivalent="i" id="oZZ-p9-deo">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="generrateSystemKeypadInput:" target="429" id="bu8-r5-jMD"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="Window" id="19">
                     <menu key="submenu" title="Window" systemMenu="window" id="24">
                         <items>
@@ -266,7 +290,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" id="fGa-UB-4eP">
                             <rect key="frame" x="1" y="0.0" width="583" height="199"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnSelection="YES" autosaveColumns="NO" headerView="379" id="378">
                                     <rect key="frame" x="0.0" y="0.0" width="583" height="176"/>
@@ -443,7 +467,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" drawsBackground="NO" id="VDU-ei-fLa">
                             <rect key="frame" x="1" y="1" width="798" height="288"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <collectionView selectable="YES" maxNumberOfColumns="1" id="C9g-Ed-IER">
                                     <rect key="frame" x="0.0" y="0.0" width="798" height="288"/>
