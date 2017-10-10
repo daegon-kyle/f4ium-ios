@@ -725,7 +725,7 @@ NSString *kvoContext = @"f4ium-iosContext";
         return;
     
     NSAlert *alert = [[NSAlert alloc] init];
-    [alert setMessageText:@"입력할 일반 키패드 문자열을 입력해주세요."];
+    [alert setMessageText:@"생성할 일반 키패드 문자열을 입력해주세요."];
     [alert setInformativeText:[NSString stringWithFormat:@"%@%@", @"현재 마지막으로 감지한 앱 내 항목: ", lastRetrievedID]];
     [alert addButtonWithTitle:@"확인"];
     [alert addButtonWithTitle:@"취소"];
@@ -736,6 +736,8 @@ NSString *kvoContext = @"f4ium-iosContext";
     NSInteger button = [alert runModal];
     
     if (button == NSAlertFirstButtonReturn) {
+        [self createSingleWindowShot:selectedWindowID];
+        
         NSMutableDictionary *cmd = [NSMutableDictionary new];
         NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
         NSString *cmdCoordinate = @"";
@@ -756,7 +758,8 @@ NSString *kvoContext = @"f4ium-iosContext";
     SecurityKeypadMap *secKeyMap = [SecurityKeypadMap sharedSecurityKeyMap];
     
     NSAlert *alert = [[NSAlert alloc] init];
-    [alert setMessageText:@"입력할 보안 키패드 문자열을 입력해주세요 (한글 입력 금지)."];
+    [alert setMessageText:@"생성할 보안 키패드 문자열을 입력해주세요."];
+    [alert setInformativeText:@"한글 입력 금지!"];
     [alert addButtonWithTitle:@"확인"];
     [alert addButtonWithTitle:@"취소"];
     
@@ -766,6 +769,8 @@ NSString *kvoContext = @"f4ium-iosContext";
     NSInteger button = [alert runModal];
     
     if (button == NSAlertFirstButtonReturn) {
+        [self createSingleWindowShot:selectedWindowID];
+        
         for (int i = 0; i < input.stringValue.length; i++) {
             NSString *substr = [input.stringValue substringWithRange:NSMakeRange(i, 1)];
             unichar chr = [input.stringValue characterAtIndex:i];
@@ -876,6 +881,33 @@ NSString *kvoContext = @"f4ium-iosContext";
 }
 
 - (IBAction)generrateSystemKeypadInput:(id)sender {
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:@"생성할 시스템 키패드 메시지를 선택해주세요."];
+    [alert addButtonWithTitle:@"확인"];
+    [alert addButtonWithTitle:@"취소"];
+    
+    NSPopUpButton *popupButton = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0, 0, 280, 24)];
+    [popupButton addItemWithTitle:@"확인"];
+    [alert setAccessoryView:popupButton];
+    NSInteger button = [alert runModal];
+    
+    if (button == NSAlertFirstButtonReturn) {
+        [self createSingleWindowShot:selectedWindowID];
+        
+        NSMutableDictionary *cmd = [NSMutableDictionary new];
+        NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        NSString *cmdCoordinate = @"";
+        NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", popupButton.titleOfSelectedItem];
+        NSLog(@"%@", cmdID);
+        
+        [cmd setValue:outputView.image forKey:@"image"];
+        [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+        [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+        [cmd setValue:cmdID forKey:@"cmdID"];
+        [cmdList addObject:cmd];
+        
+        [self updateCommandList];
+    }
 }
 
 - (IBAction)toggleFramingEffects:(id)sender {
