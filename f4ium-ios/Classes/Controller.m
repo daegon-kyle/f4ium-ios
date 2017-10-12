@@ -646,7 +646,35 @@ NSString *kvoContext = @"f4ium-iosContext";
 
 #pragma mark Control Actions
 
-- (IBAction)exportToJUnitCode:(id)sender {
+- (IBAction)openFile:(id)sender {
+    NSOpenPanel* openPanel = NSOpenPanel.openPanel;
+    [openPanel setAllowedFileTypes:@[@"f4i"]];
+    [openPanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+            NSMutableArray *fileContent = [NSMutableArray arrayWithContentsOfFile:openPanel.URL.path];
+            
+            if (fileContent == nil) {
+                NSAlert *alert = [[NSAlert alloc] init];
+                [alert setMessageText:@"알림"];
+                [alert setInformativeText:@"파일 열기에 실패하였습니다."];
+                [alert addButtonWithTitle:@"확인"];
+                [alert setAlertStyle:NSAlertStyleWarning];
+                [alert runModal];
+                
+            } else {
+                for (int i = 0; i < fileContent.count; i++) {
+                    NSImage *image = [[NSImage alloc] initWithData:[fileContent[i] objectForKey:@"image"]];
+                    [fileContent[i] setObject:image forKey:@"image"];
+                }
+                
+                cmdList = fileContent;
+                [self updateCommandList];
+            }
+        }
+    }];
+}
+
+- (IBAction)saveFile:(id)sender {
     if (cmdList.count == 0) {
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:@"알림"];
@@ -654,57 +682,95 @@ NSString *kvoContext = @"f4ium-iosContext";
         [alert addButtonWithTitle:@"확인"];
         [alert setAlertStyle:NSAlertStyleWarning];
         [alert runModal];
-        
-    } else {
-        NSSavePanel* savePanel = NSSavePanel.savePanel;
-        [savePanel setAllowedFileTypes:@[@"java"]];
-        [savePanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
-            if (result == NSFileHandlingPanelOKButton) {
-                NSMutableString *fileContent = [NSMutableString new];
+        return;
+    }
+    
+    NSSavePanel* savePanel = NSSavePanel.savePanel;
+    [savePanel setAllowedFileTypes:@[@"f4i"]];
+    [savePanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+            NSMutableArray *fileContent = [NSMutableArray arrayWithArray:cmdList];
+            
+            for (int i = 0; i < fileContent.count; i++) {
+                NSData *imageData = [[fileContent[i] objectForKey:@"image"] TIFFRepresentation];
+                NSBitmapImageRep *rep = [NSBitmapImageRep imageRepWithData:imageData];
+                NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:0.1] forKey:NSImageCompressionFactor];
+                NSData *dataToWrite = [rep representationUsingType:NSJPEGFileType properties:options];
+                [fileContent[i] setObject:dataToWrite forKey:@"image"];
+            }
+            
+            BOOL success = [fileContent writeToURL:savePanel.URL atomically:NO];
+            if (!success) {
+                NSAlert *alert = [[NSAlert alloc] init];
+                [alert setMessageText:@"알림"];
+                [alert setInformativeText:@"파일 저장에 실패하였습니다."];
+                [alert addButtonWithTitle:@"확인"];
+                [alert setAlertStyle:NSAlertStyleWarning];
+                [alert runModal];
+            }
+        }
+    }];
+}
+
+- (IBAction)exportAsJUnitCode:(id)sender {
+    if (cmdList.count == 0) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"알림"];
+        [alert setInformativeText:@"내보내기할 명령어가 없습니다."];
+        [alert addButtonWithTitle:@"확인"];
+        [alert setAlertStyle:NSAlertStyleWarning];
+        [alert runModal];
+        return;
+    }
+    
+    NSSavePanel* savePanel = NSSavePanel.savePanel;
+    [savePanel setAllowedFileTypes:@[@"java"]];
+    [savePanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+            NSMutableString *fileContent = [NSMutableString new];
+            
+            for (int i = 0; i < collectionView.subviews.count; i++) {
+                StepCollectionViewItem *stepItem = (StepCollectionViewItem *)[collectionView itemAtIndex:i];
                 
-                for (int i = 0; i < collectionView.subviews.count; i++) {
-                    StepCollectionViewItem *stepItem = (StepCollectionViewItem *)[collectionView itemAtIndex:i];
-                    
-                    [fileContent appendString:[NSString stringWithFormat:@"// Step #%d\n", i]];
-                    if (stepItem.tfComment.stringValue.length > 0)
-                        [fileContent appendString:[NSString stringWithFormat:@"// %@\n", stepItem.tfComment.stringValue]];
-                    
-                    if (stepItem.radioCoordinate.state == NSOnState) {
-                        if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
-                            [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
-                            [fileContent appendString:@"\n"];
-                        }
-                        if (stepItem.tfCmdID.stringValue.length > 0) {
-                            [fileContent appendString:@"// "];
-                            [fileContent appendString:stepItem.tfCmdID.stringValue];
-                            [fileContent appendString:@"\n"];
-                        }
-                    } else {
-                        if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
-                            [fileContent appendString:@"// "];
-                            [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
-                            [fileContent appendString:@"\n"];
-                        }
-                        if (stepItem.tfCmdID.stringValue.length > 0) {
-                            [fileContent appendString:stepItem.tfCmdID.stringValue];
-                            [fileContent appendString:@"\n"];
-                        }
+                [fileContent appendString:[NSString stringWithFormat:@"// Step #%d\n", i]];
+                if (stepItem.tfComment.stringValue.length > 0)
+                    [fileContent appendString:[NSString stringWithFormat:@"// %@\n", stepItem.tfComment.stringValue]];
+                
+                if (stepItem.radioCoordinate.state == NSOnState) {
+                    if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
+                        [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
+                        [fileContent appendString:@"\n"];
+                    }
+                    if (stepItem.tfCmdID.stringValue.length > 0) {
+                        [fileContent appendString:@"// "];
+                        [fileContent appendString:stepItem.tfCmdID.stringValue];
+                        [fileContent appendString:@"\n"];
+                    }
+                } else {
+                    if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
+                        [fileContent appendString:@"// "];
+                        [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
+                        [fileContent appendString:@"\n"];
+                    }
+                    if (stepItem.tfCmdID.stringValue.length > 0) {
+                        [fileContent appendString:stepItem.tfCmdID.stringValue];
+                        [fileContent appendString:@"\n"];
                     }
                 }
-                
-                NSError *error;
-                BOOL success = [fileContent writeToURL:savePanel.URL atomically:NO encoding:NSUTF8StringEncoding error:&error];
-                if (!success) {
-                    NSAlert *alert = [[NSAlert alloc] init];
-                    [alert setMessageText:@"알림"];
-                    [alert setInformativeText:[NSString stringWithFormat:@"%@", error.localizedDescription]];
-                    [alert addButtonWithTitle:@"확인"];
-                    [alert setAlertStyle:NSAlertStyleWarning];
-                    [alert runModal];
-                }
             }
-        }];
-    }
+            
+            NSError *error;
+            BOOL success = [fileContent writeToURL:savePanel.URL atomically:NO encoding:NSUTF8StringEncoding error:&error];
+            if (!success) {
+                NSAlert *alert = [[NSAlert alloc] init];
+                [alert setMessageText:@"알림"];
+                [alert setInformativeText:[NSString stringWithFormat:@"%@", error.localizedDescription]];
+                [alert addButtonWithTitle:@"확인"];
+                [alert setAlertStyle:NSAlertStyleWarning];
+                [alert runModal];
+            }
+        }
+    }];
 }
 
 - (BOOL)checkLastRetrievedID {
