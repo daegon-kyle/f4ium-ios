@@ -976,6 +976,43 @@ NSString *kvoContext = @"f4ium-iosContext";
     }
 }
 
+- (IBAction)generateDelayEvent:(id)sender {
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:@"시간지연을 초 단위로 입력해주세요."];
+    [alert addButtonWithTitle:@"확인"];
+    [alert addButtonWithTitle:@"취소"];
+    
+    NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 280, 24)];
+    [input setStringValue:@""];
+    [alert setAccessoryView:input];
+    NSInteger button = [alert runModal];
+    
+    if (button == NSAlertFirstButtonReturn) {
+        NSCharacterSet *alphaNums = [NSCharacterSet decimalDigitCharacterSet];
+        NSCharacterSet *inStringSet = [NSCharacterSet characterSetWithCharactersInString:input.stringValue];
+        if (![alphaNums isSupersetOfSet:inStringSet]) {
+            [self generateDelayEvent:nil];
+            return;
+        }
+        
+        [self createSingleWindowShot:selectedWindowID];
+        
+        NSMutableDictionary *cmd = [NSMutableDictionary new];
+        NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        NSString *cmdCoordinate = @"";
+        NSString *cmdID = [NSString stringWithFormat:@"Thread.sleep(%@ * 1000);", input.stringValue];
+        NSLog(@"%@", cmdID);
+        
+        [cmd setValue:outputView.image forKey:@"image"];
+        [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+        [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+        [cmd setValue:cmdID forKey:@"cmdID"];
+        [cmdList addObject:cmd];
+        
+        [self updateCommandList];
+    }
+}
+
 - (IBAction)toggleFramingEffects:(id)sender {
     imageOptions = ChangeBits(imageOptions, kCGWindowImageBoundsIgnoreFraming, [sender intValue] == NSOnState);
     [self updateImageWithSelection];
