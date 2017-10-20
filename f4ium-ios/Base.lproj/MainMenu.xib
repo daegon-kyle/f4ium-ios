@@ -239,7 +239,7 @@
                             <menuItem title="System Keypad Input" keyEquivalent="i" id="oZZ-p9-deo">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="generrateSystemKeypadInput:" target="429" id="bu8-r5-jMD"/>
+                                    <action selector="generateSystemKeypadInput:" target="429" id="h2M-yx-nd0"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="vXO-dM-XPe"/>

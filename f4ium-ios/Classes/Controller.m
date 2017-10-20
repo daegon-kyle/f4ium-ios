@@ -946,7 +946,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     }
 }
 
-- (IBAction)generrateSystemKeypadInput:(id)sender {
+- (IBAction)generateSystemKeypadInput:(id)sender {
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setMessageText:@"생성할 시스템 키패드 메시지를 선택해주세요."];
     [alert addButtonWithTitle:@"확인"];
@@ -954,6 +954,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     
     NSPopUpButton *popupButton = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0, 0, 280, 24)];
     [popupButton addItemWithTitle:@"확인"];
+    [popupButton addItemWithTitle:@"취소"];
     [alert setAccessoryView:popupButton];
     NSInteger button = [alert runModal];
     
