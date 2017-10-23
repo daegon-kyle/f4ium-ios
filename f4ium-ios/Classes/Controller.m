@@ -497,8 +497,22 @@ NSString *kvoContext = @"f4ium-iosContext";
 - (void)updateCommandList {
     [collectionView setContent:cmdList];
     
-    NSButton *btnAddEvent = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnAddEvent;
+    NSButton *btnMoveUp = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnMoveUp;
     NSClickGestureRecognizer *click = [[NSClickGestureRecognizer alloc] init];
+    click.target = self;
+    click.numberOfClicksRequired = 1;
+    click.action = @selector(moveUpAction:);
+    [btnMoveUp addGestureRecognizer:click];
+    
+    NSButton *btnMoveDown = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnMoveDown;
+    click = [[NSClickGestureRecognizer alloc] init];
+    click.target = self;
+    click.numberOfClicksRequired = 1;
+    click.action = @selector(moveDownAction:);
+    [btnMoveDown addGestureRecognizer:click];
+    
+    NSButton *btnAddEvent = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnAddEvent;
+    click = [[NSClickGestureRecognizer alloc] init];
     click.target = self;
     click.numberOfClicksRequired = 1;
     click.action = @selector(addEventAction:);
@@ -516,6 +530,64 @@ NSString *kvoContext = @"f4ium-iosContext";
         rect.origin.y += (cmdList.count-1) * rect.size.height;
         [collectionView scrollRectToVisible:rect];
     }
+}
+
+- (void)moveUpAction:(NSClickGestureRecognizer *)sender {
+    int tag = (int)[(NSButton*)sender.view tag];
+    int index = tag-1;
+    NSInteger totalCmdCount = [cmdList count];
+    if (index == 0)
+        return;
+    
+    NSMutableDictionary *prev = [cmdList objectAtIndex:index-1];
+    [prev setValue:[NSString stringWithFormat:@"%d", index+1] forKey:@"cmdNumber"];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index+1]];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnMoveUp setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnMoveDown setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnAddEvent setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnRemoveEvent setTag:index+1];
+    
+    NSMutableDictionary *current = [cmdList objectAtIndex:index];
+    [current setValue:[NSString stringWithFormat:@"%d", index] forKey:@"cmdNumber"];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index]];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveUp setTag:index];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveDown setTag:index];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnAddEvent setTag:index];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnRemoveEvent setTag:index];
+    
+    [cmdList replaceObjectAtIndex:index-1 withObject:current];
+    [cmdList replaceObjectAtIndex:index withObject:prev];
+    
+    [collectionView setContent:cmdList];
+}
+
+- (void)moveDownAction:(NSClickGestureRecognizer *)sender {
+    int tag = (int)[(NSButton*)sender.view tag];
+    int index = tag-1;
+    NSInteger totalCmdCount = [cmdList count];
+    if (tag == totalCmdCount)
+        return;
+    
+    NSMutableDictionary *next = [cmdList objectAtIndex:index+1];
+    [next setValue:[NSString stringWithFormat:@"%d", index+1] forKey:@"cmdNumber"];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index+1]];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnMoveUp setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnMoveDown setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnAddEvent setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnRemoveEvent setTag:index+1];
+    
+    NSMutableDictionary *current = [cmdList objectAtIndex:index];
+    [current setValue:[NSString stringWithFormat:@"%d", index+2] forKey:@"cmdNumber"];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index+2]];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveUp setTag:index+2];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveDown setTag:index+2];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnAddEvent setTag:index+2];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnRemoveEvent setTag:index+2];
+    
+    [cmdList replaceObjectAtIndex:index+1 withObject:current];
+    [cmdList replaceObjectAtIndex:index withObject:next];
+    
+    [collectionView setContent:cmdList];
 }
 
 - (void)addEventAction:(NSClickGestureRecognizer *)sender {
@@ -554,9 +626,11 @@ NSString *kvoContext = @"f4ium-iosContext";
                 [cmd setValue:[NSString stringWithFormat:@"%d", i+1] forKey:@"cmdNumber"];
                 [cmdList replaceObjectAtIndex:i withObject:cmd];
                 
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", i+1]];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnMoveUp setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnMoveDown setTag:i+1];
                 [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnAddEvent setTag:i+1];
                 [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnRemoveEvent setTag:i+1];
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", i+1]];
             }
             [cmdList removeObjectAtIndex:totalCmdCount-1];
         }
