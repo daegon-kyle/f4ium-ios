@@ -496,12 +496,20 @@ NSString *kvoContext = @"f4ium-iosContext";
 
 - (void)updateCommandList {
     [collectionView setContent:cmdList];
+    
+    NSButton *btnAddEvent = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnAddEvent;
     NSClickGestureRecognizer *click = [[NSClickGestureRecognizer alloc] init];
     click.target = self;
     click.numberOfClicksRequired = 1;
-    click.action = @selector(deleteCommand:);
-    NSButton *cancelBtn = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).cancelBtn;
-    [cancelBtn addGestureRecognizer:click];
+    click.action = @selector(addEventAction:);
+    [btnAddEvent addGestureRecognizer:click];
+    
+    NSButton *btnRemoveEvent = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnRemoveEvent;
+    click = [[NSClickGestureRecognizer alloc] init];
+    click.target = self;
+    click.numberOfClicksRequired = 1;
+    click.action = @selector(removeEventAction:);
+    [btnRemoveEvent addGestureRecognizer:click];
     
     if (cmdList.count > 0) {
         NSRect rect = collectionView.enclosingScrollView.frame;
@@ -510,7 +518,29 @@ NSString *kvoContext = @"f4ium-iosContext";
     }
 }
 
-- (void)deleteCommand:(NSClickGestureRecognizer *)sender {
+- (void)addEventAction:(NSClickGestureRecognizer *)sender {
+    NSMenu *ctxMenu = [[NSMenu alloc] initWithTitle:@"Add Event"];
+    [ctxMenu insertItemWithTitle:@"Normal Keypad Input" action:@selector(generateNormalKeypadInput:) keyEquivalent:@"" atIndex:0];
+    [ctxMenu insertItemWithTitle:@"Security Keypad Input" action:@selector(generateSecurityKeypadInput:) keyEquivalent:@"" atIndex:1];
+    [ctxMenu insertItemWithTitle:@"System Keypad Input" action:@selector(generateSystemKeypadInput:) keyEquivalent:@"" atIndex:2];
+    [ctxMenu insertItem:NSMenuItem.separatorItem atIndex:3];
+    [ctxMenu insertItemWithTitle:@"Delay Event" action:@selector(generateDelayEvent:) keyEquivalent:@"" atIndex:4];
+    CGPoint location = [sender.view convertRect:sender.view.bounds toView:nil].origin;
+    location.x += [sender locationInView:sender.view].x;
+    location.y += [sender locationInView:sender.view].y;
+    NSEvent* event = [NSEvent otherEventWithType:NSApplicationDefined
+                                        location:location
+                                   modifierFlags:0
+                                       timestamp:0
+                                    windowNumber:[[self window] windowNumber]
+                                         context:[[self window] graphicsContext]
+                                         subtype:100
+                                           data1:0
+                                           data2:0];
+    [NSMenu popUpContextMenu:ctxMenu withEvent:event forView:sender.view];
+}
+
+- (void)removeEventAction:(NSClickGestureRecognizer *)sender {
     int tag = (int)[(NSButton*)sender.view tag];
     int index = tag-1;
     NSInteger totalCmdCount = [cmdList count];
@@ -524,7 +554,8 @@ NSString *kvoContext = @"f4ium-iosContext";
                 [cmd setValue:[NSString stringWithFormat:@"%d", i+1] forKey:@"cmdNumber"];
                 [cmdList replaceObjectAtIndex:i withObject:cmd];
                 
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).cancelBtn setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnAddEvent setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnRemoveEvent setTag:i+1];
                 [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", i+1]];
             }
             [cmdList removeObjectAtIndex:totalCmdCount-1];

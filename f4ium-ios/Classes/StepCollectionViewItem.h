@@ -17,7 +17,7 @@
 @property (weak) IBOutlet NSTextField *tfCmdCooridatenate;
 @property (weak) IBOutlet NSTextField *tfCmdID;
 @property (weak) IBOutlet NSTextField *tfComment;
-@property (weak) IBOutlet NSButton *cancelBtn;
-
+@property (weak) IBOutlet NSButton *btnAddEvent;
+@property (weak) IBOutlet NSButton *btnRemoveEvent;
 
 @end

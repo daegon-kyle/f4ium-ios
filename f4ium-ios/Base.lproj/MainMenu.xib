@@ -221,9 +221,9 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Insert Event" id="mQ2-4g-OyA">
+                <menuItem title="Add Event" id="mQ2-4g-OyA">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Insert Event" id="HEb-XN-1Ex">
+                    <menu key="submenu" title="Add Event" id="HEb-XN-1Ex">
                         <items>
                             <menuItem title="Normal Keypad Input" keyEquivalent="i" id="74E-XT-YeA">
                                 <connections>

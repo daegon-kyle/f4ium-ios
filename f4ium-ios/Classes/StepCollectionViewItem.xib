@@ -8,7 +8,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="StepCollectionViewItem">
             <connections>
-                <outlet property="cancelBtn" destination="VX7-U5-7Ub" id="uZL-Sc-egS"/>
+                <outlet property="btnAddEvent" destination="xJt-Vp-hXj" id="H0L-rk-jPH"/>
+                <outlet property="btnRemoveEvent" destination="vF0-HH-by9" id="xwL-0w-08b"/>
                 <outlet property="imgView" destination="xyH-7E-eQB" id="Xif-3X-Rzx"/>
                 <outlet property="radioCoordinate" destination="X1d-k2-1eu" id="DnX-kM-8ix"/>
                 <outlet property="radioID" destination="Gsx-1q-Iee" id="54u-GC-IQK"/>
@@ -97,16 +98,28 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VX7-U5-7Ub">
-                    <rect key="frame" x="745" y="126" width="30" height="14"/>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vF0-HH-by9">
+                    <rect key="frame" x="725" y="123" width="45" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="square" title="X" bezelStyle="shadowlessSquare" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="6ZM-Ez-X60">
+                    <buttonCell key="cell" type="square" title="삭제" bezelStyle="shadowlessSquare" image="Close" imagePosition="left" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="blT-bX-vRq">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="systemBold" size="18"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xJt-Vp-hXj">
+                    <rect key="frame" x="630" y="123" width="85" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" title="이벤트 추가" bezelStyle="shadowlessSquare" image="Plus" imagePosition="left" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Wl8-JK-7vk">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
                     </buttonCell>
                 </button>
             </subviews>
             <point key="canvasLocation" x="-153" y="152"/>
         </customView>
     </objects>
+    <resources>
+        <image name="Close" width="128" height="128"/>
+        <image name="Plus" width="102.40000152587891" height="102.40000152587891"/>
+    </resources>
 </document>
