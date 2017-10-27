@@ -671,11 +671,11 @@ NSString *kvoContext = @"f4ium-iosContext";
     
     NSRect e = [[NSScreen mainScreen] frame];
     int H = (int)e.size.height;
-    float x = NSEvent.mouseLocation.x - selectedWindowOriginX;
-    float y = H - NSEvent.mouseLocation.y - selectedWindowOriginY;
+    float x = [self getMouseX];
+    float y = [self getMouseY];
     
-    // 좌표가 창 영역 안에 있을 때에만
-    if (x > selectedWindowSizeW || y > selectedWindowSizeH)
+    // 좌표가 창 영역 안에 없거나  필터링
+    if (x > selectedWindowSizeW || y > selectedWindowSizeH || y < 0)
         return YES;
     
     return NO;
