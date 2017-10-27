@@ -674,7 +674,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     float x = [self getMouseX];
     float y = [self getMouseY];
     
-    // 좌표가 창 영역 안에 없거나  필터링
+    // 좌표가 창 영역 안에 없는 경우에는 필터링
     if (x > selectedWindowSizeW || y > selectedWindowSizeH || y < 0)
         return YES;
     
