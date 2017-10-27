@@ -9,6 +9,7 @@
 #import "Controller.h"
 #import "StepCollectionViewItem.h"
 #import "SOLogger.h"
+#import "SecurityKeypadMap.h"
 #import <AppKit/NSClickGestureRecognizer.h>
 
 extern SOLogger *gLogger;
@@ -495,12 +496,34 @@ NSString *kvoContext = @"f4ium-iosContext";
 
 - (void)updateCommandList {
     [collectionView setContent:cmdList];
+    
+    NSButton *btnMoveUp = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnMoveUp;
     NSClickGestureRecognizer *click = [[NSClickGestureRecognizer alloc] init];
     click.target = self;
     click.numberOfClicksRequired = 1;
-    click.action = @selector(deleteCommand:);
-    NSButton *cancelBtn = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).cancelBtn;
-    [cancelBtn addGestureRecognizer:click];
+    click.action = @selector(moveUpAction:);
+    [btnMoveUp addGestureRecognizer:click];
+    
+    NSButton *btnMoveDown = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnMoveDown;
+    click = [[NSClickGestureRecognizer alloc] init];
+    click.target = self;
+    click.numberOfClicksRequired = 1;
+    click.action = @selector(moveDownAction:);
+    [btnMoveDown addGestureRecognizer:click];
+    
+    NSButton *btnAddEvent = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnAddEvent;
+    click = [[NSClickGestureRecognizer alloc] init];
+    click.target = self;
+    click.numberOfClicksRequired = 1;
+    click.action = @selector(addEventAction:);
+    [btnAddEvent addGestureRecognizer:click];
+    
+    NSButton *btnRemoveEvent = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnRemoveEvent;
+    click = [[NSClickGestureRecognizer alloc] init];
+    click.target = self;
+    click.numberOfClicksRequired = 1;
+    click.action = @selector(removeEventAction:);
+    [btnRemoveEvent addGestureRecognizer:click];
     
     if (cmdList.count > 0) {
         NSRect rect = collectionView.enclosingScrollView.frame;
@@ -509,7 +532,87 @@ NSString *kvoContext = @"f4ium-iosContext";
     }
 }
 
-- (void)deleteCommand:(NSClickGestureRecognizer *)sender {
+- (void)moveUpAction:(NSClickGestureRecognizer *)sender {
+    int tag = (int)[(NSButton*)sender.view tag];
+    int index = tag-1;
+    NSInteger totalCmdCount = [cmdList count];
+    if (index == 0)
+        return;
+    
+    NSMutableDictionary *prev = [cmdList objectAtIndex:index-1];
+    [prev setValue:[NSString stringWithFormat:@"%d", index+1] forKey:@"cmdNumber"];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index+1]];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnMoveUp setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnMoveDown setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnAddEvent setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnRemoveEvent setTag:index+1];
+    
+    NSMutableDictionary *current = [cmdList objectAtIndex:index];
+    [current setValue:[NSString stringWithFormat:@"%d", index] forKey:@"cmdNumber"];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index]];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveUp setTag:index];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveDown setTag:index];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnAddEvent setTag:index];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnRemoveEvent setTag:index];
+    
+    [cmdList replaceObjectAtIndex:index-1 withObject:current];
+    [cmdList replaceObjectAtIndex:index withObject:prev];
+    
+    [collectionView setContent:cmdList];
+}
+
+- (void)moveDownAction:(NSClickGestureRecognizer *)sender {
+    int tag = (int)[(NSButton*)sender.view tag];
+    int index = tag-1;
+    NSInteger totalCmdCount = [cmdList count];
+    if (tag == totalCmdCount)
+        return;
+    
+    NSMutableDictionary *next = [cmdList objectAtIndex:index+1];
+    [next setValue:[NSString stringWithFormat:@"%d", index+1] forKey:@"cmdNumber"];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index+1]];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnMoveUp setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnMoveDown setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnAddEvent setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnRemoveEvent setTag:index+1];
+    
+    NSMutableDictionary *current = [cmdList objectAtIndex:index];
+    [current setValue:[NSString stringWithFormat:@"%d", index+2] forKey:@"cmdNumber"];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index+2]];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveUp setTag:index+2];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveDown setTag:index+2];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnAddEvent setTag:index+2];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnRemoveEvent setTag:index+2];
+    
+    [cmdList replaceObjectAtIndex:index+1 withObject:current];
+    [cmdList replaceObjectAtIndex:index withObject:next];
+    
+    [collectionView setContent:cmdList];
+}
+
+- (void)addEventAction:(NSClickGestureRecognizer *)sender {
+    NSMenu *ctxMenu = [[NSMenu alloc] initWithTitle:@"Add Event"];
+    [ctxMenu insertItemWithTitle:@"Normal Keypad Input" action:@selector(generateNormalKeypadInput:) keyEquivalent:@"" atIndex:0];
+    [ctxMenu insertItemWithTitle:@"Security Keypad Input" action:@selector(generateSecurityKeypadInput:) keyEquivalent:@"" atIndex:1];
+    [ctxMenu insertItemWithTitle:@"System Keypad Input" action:@selector(generateSystemKeypadInput:) keyEquivalent:@"" atIndex:2];
+    [ctxMenu insertItem:NSMenuItem.separatorItem atIndex:3];
+    [ctxMenu insertItemWithTitle:@"Delay Event" action:@selector(generateDelayEvent:) keyEquivalent:@"" atIndex:4];
+    CGPoint location = [sender.view convertRect:sender.view.bounds toView:nil].origin;
+    location.x += [sender locationInView:sender.view].x;
+    location.y += [sender locationInView:sender.view].y;
+    NSEvent* event = [NSEvent otherEventWithType:NSApplicationDefined
+                                        location:location
+                                   modifierFlags:0
+                                       timestamp:0
+                                    windowNumber:[[self window] windowNumber]
+                                         context:[[self window] graphicsContext]
+                                         subtype:100
+                                           data1:0
+                                           data2:0];
+    [NSMenu popUpContextMenu:ctxMenu withEvent:event forView:sender.view];
+}
+
+- (void)removeEventAction:(NSClickGestureRecognizer *)sender {
     int tag = (int)[(NSButton*)sender.view tag];
     int index = tag-1;
     NSInteger totalCmdCount = [cmdList count];
@@ -523,8 +626,11 @@ NSString *kvoContext = @"f4ium-iosContext";
                 [cmd setValue:[NSString stringWithFormat:@"%d", i+1] forKey:@"cmdNumber"];
                 [cmdList replaceObjectAtIndex:i withObject:cmd];
                 
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).cancelBtn setTag:i+1];
                 [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", i+1]];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnMoveUp setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnMoveDown setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnAddEvent setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnRemoveEvent setTag:i+1];
             }
             [cmdList removeObjectAtIndex:totalCmdCount-1];
         }
@@ -565,11 +671,11 @@ NSString *kvoContext = @"f4ium-iosContext";
     
     NSRect e = [[NSScreen mainScreen] frame];
     int H = (int)e.size.height;
-    float x = NSEvent.mouseLocation.x - selectedWindowOriginX;
-    float y = H - NSEvent.mouseLocation.y - selectedWindowOriginY;
+    float x = [self getMouseX];
+    float y = [self getMouseY];
     
-    // 좌표가 창 영역 안에 있을 때에만
-    if (x > selectedWindowSizeW || y > selectedWindowSizeH)
+    // 좌표가 창 영역 안에 없거나  필터링
+    if (x > selectedWindowSizeW || y > selectedWindowSizeH || y < 0)
         return YES;
     
     return NO;
@@ -645,7 +751,73 @@ NSString *kvoContext = @"f4ium-iosContext";
 
 #pragma mark Control Actions
 
-- (IBAction)exportToJUnitCode:(id)sender {
+- (IBAction)openFile:(id)sender {
+    NSOpenPanel* openPanel = NSOpenPanel.openPanel;
+    [openPanel setAllowedFileTypes:@[@"f4i"]];
+    [openPanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+            NSMutableArray *fileContent = [NSMutableArray arrayWithContentsOfFile:openPanel.URL.path];
+            
+            if (fileContent == nil) {
+                NSAlert *alert = [[NSAlert alloc] init];
+                [alert setMessageText:@"알림"];
+                [alert setInformativeText:@"파일 열기에 실패하였습니다."];
+                [alert addButtonWithTitle:@"확인"];
+                [alert setAlertStyle:NSAlertStyleWarning];
+                [alert runModal];
+                
+            } else {
+                for (int i = 0; i < fileContent.count; i++) {
+                    NSImage *image = [[NSImage alloc] initWithData:[fileContent[i] objectForKey:@"image"]];
+                    [fileContent[i] setObject:image forKey:@"image"];
+                }
+                
+                cmdList = fileContent;
+                [self updateCommandList];
+            }
+        }
+    }];
+}
+
+- (IBAction)saveFile:(id)sender {
+    if (cmdList.count == 0) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"알림"];
+        [alert setInformativeText:@"저장할 명령어가 없습니다."];
+        [alert addButtonWithTitle:@"확인"];
+        [alert setAlertStyle:NSAlertStyleWarning];
+        [alert runModal];
+        return;
+    }
+    
+    NSSavePanel* savePanel = NSSavePanel.savePanel;
+    [savePanel setAllowedFileTypes:@[@"f4i"]];
+    [savePanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+            NSMutableArray *fileContent = [NSMutableArray arrayWithArray:cmdList];
+            
+            for (int i = 0; i < fileContent.count; i++) {
+                NSData *imageData = [[fileContent[i] objectForKey:@"image"] TIFFRepresentation];
+                NSBitmapImageRep *rep = [NSBitmapImageRep imageRepWithData:imageData];
+                NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:0.1] forKey:NSImageCompressionFactor];
+                NSData *dataToWrite = [rep representationUsingType:NSJPEGFileType properties:options];
+                [fileContent[i] setObject:dataToWrite forKey:@"image"];
+            }
+            
+            BOOL success = [fileContent writeToURL:savePanel.URL atomically:NO];
+            if (!success) {
+                NSAlert *alert = [[NSAlert alloc] init];
+                [alert setMessageText:@"알림"];
+                [alert setInformativeText:@"파일 저장에 실패하였습니다."];
+                [alert addButtonWithTitle:@"확인"];
+                [alert setAlertStyle:NSAlertStyleWarning];
+                [alert runModal];
+            }
+        }
+    }];
+}
+
+- (IBAction)exportAsJUnitCode:(id)sender {
     if (cmdList.count == 0) {
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:@"알림"];
@@ -653,57 +825,57 @@ NSString *kvoContext = @"f4ium-iosContext";
         [alert addButtonWithTitle:@"확인"];
         [alert setAlertStyle:NSAlertStyleWarning];
         [alert runModal];
-        
-    } else {
-        NSSavePanel* savePanel = NSSavePanel.savePanel;
-        [savePanel setAllowedFileTypes:@[@"java"]];
-        [savePanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
-            if (result == NSFileHandlingPanelOKButton) {
-                NSMutableString *fileContent = [NSMutableString new];
+        return;
+    }
+    
+    NSSavePanel* savePanel = NSSavePanel.savePanel;
+    [savePanel setAllowedFileTypes:@[@"java"]];
+    [savePanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+            NSMutableString *fileContent = [NSMutableString new];
+            
+            for (int i = 0; i < collectionView.subviews.count; i++) {
+                StepCollectionViewItem *stepItem = (StepCollectionViewItem *)[collectionView itemAtIndex:i];
                 
-                for (int i = 0; i < collectionView.subviews.count; i++) {
-                    StepCollectionViewItem *stepItem = (StepCollectionViewItem *)[collectionView itemAtIndex:i];
-                    
-                    [fileContent appendString:[NSString stringWithFormat:@"// Step #%d\n", i]];
-                    if (stepItem.tfComment.stringValue.length > 0)
-                        [fileContent appendString:[NSString stringWithFormat:@"// %@\n", stepItem.tfComment.stringValue]];
-                    
-                    if (stepItem.radioCoordinate.state == NSOnState) {
-                        if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
-                            [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
-                            [fileContent appendString:@"\n"];
-                        }
-                        if (stepItem.tfCmdID.stringValue.length > 0) {
-                            [fileContent appendString:@"// "];
-                            [fileContent appendString:stepItem.tfCmdID.stringValue];
-                            [fileContent appendString:@"\n"];
-                        }
-                    } else {
-                        if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
-                            [fileContent appendString:@"// "];
-                            [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
-                            [fileContent appendString:@"\n"];
-                        }
-                        if (stepItem.tfCmdID.stringValue.length > 0) {
-                            [fileContent appendString:stepItem.tfCmdID.stringValue];
-                            [fileContent appendString:@"\n"];
-                        }
+                [fileContent appendString:[NSString stringWithFormat:@"// Step #%d\n", i]];
+                if (stepItem.tfComment.stringValue.length > 0)
+                    [fileContent appendString:[NSString stringWithFormat:@"// %@\n", stepItem.tfComment.stringValue]];
+                
+                if (stepItem.radioCoordinate.state == NSOnState) {
+                    if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
+                        [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
+                        [fileContent appendString:@"\n"];
+                    }
+                    if (stepItem.tfCmdID.stringValue.length > 0) {
+                        [fileContent appendString:@"// "];
+                        [fileContent appendString:stepItem.tfCmdID.stringValue];
+                        [fileContent appendString:@"\n"];
+                    }
+                } else {
+                    if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
+                        [fileContent appendString:@"// "];
+                        [fileContent appendString:stepItem.tfCmdCooridatenate.stringValue];
+                        [fileContent appendString:@"\n"];
+                    }
+                    if (stepItem.tfCmdID.stringValue.length > 0) {
+                        [fileContent appendString:stepItem.tfCmdID.stringValue];
+                        [fileContent appendString:@"\n"];
                     }
                 }
-                
-                NSError *error;
-                BOOL success = [fileContent writeToURL:savePanel.URL atomically:NO encoding:NSUTF8StringEncoding error:&error];
-                if (!success) {
-                    NSAlert *alert = [[NSAlert alloc] init];
-                    [alert setMessageText:@"알림"];
-                    [alert setInformativeText:[NSString stringWithFormat:@"%@", error.localizedDescription]];
-                    [alert addButtonWithTitle:@"확인"];
-                    [alert setAlertStyle:NSAlertStyleWarning];
-                    [alert runModal];
-                }
             }
-        }];
-    }
+            
+            NSError *error;
+            BOOL success = [fileContent writeToURL:savePanel.URL atomically:NO encoding:NSUTF8StringEncoding error:&error];
+            if (!success) {
+                NSAlert *alert = [[NSAlert alloc] init];
+                [alert setMessageText:@"알림"];
+                [alert setInformativeText:[NSString stringWithFormat:@"%@", error.localizedDescription]];
+                [alert addButtonWithTitle:@"확인"];
+                [alert setAlertStyle:NSAlertStyleWarning];
+                [alert runModal];
+            }
+        }
+    }];
 }
 
 - (BOOL)checkLastRetrievedID {
@@ -724,7 +896,7 @@ NSString *kvoContext = @"f4ium-iosContext";
         return;
     
     NSAlert *alert = [[NSAlert alloc] init];
-    [alert setMessageText:@"입력할 일반 키패드 문자열을 입력해주세요."];
+    [alert setMessageText:@"생성할 일반 키패드 문자열을 입력해주세요."];
     [alert setInformativeText:[NSString stringWithFormat:@"%@%@", @"현재 마지막으로 감지한 앱 내 항목: ", lastRetrievedID]];
     [alert addButtonWithTitle:@"확인"];
     [alert addButtonWithTitle:@"취소"];
@@ -733,7 +905,10 @@ NSString *kvoContext = @"f4ium-iosContext";
     [input setStringValue:@""];
     [alert setAccessoryView:input];
     NSInteger button = [alert runModal];
+    
     if (button == NSAlertFirstButtonReturn) {
+        [self createSingleWindowShot:selectedWindowID];
+        
         NSMutableDictionary *cmd = [NSMutableDictionary new];
         NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
         NSString *cmdCoordinate = @"";
@@ -747,14 +922,201 @@ NSString *kvoContext = @"f4ium-iosContext";
         [cmdList addObject:cmd];
         
         [self updateCommandList];
-    } else  {
     }
 }
 
 - (IBAction)generateSecurityKeypadInput:(id)sender {
+    SecurityKeypadMap *secKeyMap = [SecurityKeypadMap sharedSecurityKeyMap];
+    
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:@"생성할 보안 키패드 문자열을 입력해주세요."];
+    [alert setInformativeText:@"한글 입력 금지!"];
+    [alert addButtonWithTitle:@"확인"];
+    [alert addButtonWithTitle:@"취소"];
+    
+    NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 280, 24)];
+    [input setStringValue:@""];
+    [alert setAccessoryView:input];
+    NSInteger button = [alert runModal];
+    
+    if (button == NSAlertFirstButtonReturn) {
+        [self createSingleWindowShot:selectedWindowID];
+        
+        for (int i = 0; i < input.stringValue.length; i++) {
+            NSString *substr = [input.stringValue substringWithRange:NSMakeRange(i, 1)];
+            unichar chr = [input.stringValue characterAtIndex:i];
+            
+            if ((chr >= 'a' && chr <= 'z') || (chr >= '0' && chr <= '9')) {
+                NSMutableDictionary *cmd = [NSMutableDictionary new];
+                NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                NSString *cmdCoordinate = @"";
+                NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", [secKeyMap retrieveID:substr]];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+            } else if (chr >= 'A' && chr <= 'Z') {
+                NSMutableDictionary *cmd = [NSMutableDictionary new];
+                NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                NSString *cmdCoordinate = @"";
+                NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"대소문자 변경"];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+                cmd = [NSMutableDictionary new];
+                cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                cmdCoordinate = @"";
+                cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", [secKeyMap retrieveID:substr]];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+                cmd = [NSMutableDictionary new];
+                cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                cmdCoordinate = @"";
+                cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"대소문자 변경"];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+            } else { // 특수문자
+                NSMutableDictionary *cmd = [NSMutableDictionary new];
+                NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                NSString *cmdCoordinate = @"";
+                NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"특수문자 변경"];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+                cmd = [NSMutableDictionary new];
+                cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                cmdCoordinate = @"";
+                cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", [secKeyMap retrieveID:substr]];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+                
+                cmd = [NSMutableDictionary new];
+                cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                cmdCoordinate = @"";
+                cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"특수문자 변경"];
+                NSLog(@"%@", cmdID);
+                
+                [cmd setValue:outputView.image forKey:@"image"];
+                [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+                [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+                [cmd setValue:cmdID forKey:@"cmdID"];
+                [cmdList addObject:cmd];
+            }
+        }
+        
+        NSMutableDictionary *cmd = [NSMutableDictionary new];
+        NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        NSString *cmdCoordinate = @"";
+        NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"입력완료"];
+        NSLog(@"%@", cmdID);
+        
+        [cmd setValue:outputView.image forKey:@"image"];
+        [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+        [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+        [cmd setValue:cmdID forKey:@"cmdID"];
+        [cmdList addObject:cmd];
+        
+        [self updateCommandList];
+    }
 }
 
-- (IBAction)generrateSystemKeypadInput:(id)sender {
+- (IBAction)generateSystemKeypadInput:(id)sender {
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:@"생성할 시스템 키패드 메시지를 선택해주세요."];
+    [alert addButtonWithTitle:@"확인"];
+    [alert addButtonWithTitle:@"취소"];
+    
+    NSPopUpButton *popupButton = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0, 0, 280, 24)];
+    [popupButton addItemWithTitle:@"확인"];
+    [popupButton addItemWithTitle:@"취소"];
+    [alert setAccessoryView:popupButton];
+    NSInteger button = [alert runModal];
+    
+    if (button == NSAlertFirstButtonReturn) {
+        [self createSingleWindowShot:selectedWindowID];
+        
+        NSMutableDictionary *cmd = [NSMutableDictionary new];
+        NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        NSString *cmdCoordinate = @"";
+        NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", popupButton.titleOfSelectedItem];
+        NSLog(@"%@", cmdID);
+        
+        [cmd setValue:outputView.image forKey:@"image"];
+        [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+        [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+        [cmd setValue:cmdID forKey:@"cmdID"];
+        [cmdList addObject:cmd];
+        
+        [self updateCommandList];
+    }
+}
+
+- (IBAction)generateDelayEvent:(id)sender {
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:@"시간지연을 초 단위로 입력해주세요."];
+    [alert addButtonWithTitle:@"확인"];
+    [alert addButtonWithTitle:@"취소"];
+    
+    NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 280, 24)];
+    [input setStringValue:@""];
+    [alert setAccessoryView:input];
+    NSInteger button = [alert runModal];
+    
+    if (button == NSAlertFirstButtonReturn) {
+        NSCharacterSet *alphaNums = [NSCharacterSet decimalDigitCharacterSet];
+        NSCharacterSet *inStringSet = [NSCharacterSet characterSetWithCharactersInString:input.stringValue];
+        if (![alphaNums isSupersetOfSet:inStringSet]) {
+            [self generateDelayEvent:nil];
+            return;
+        }
+        
+        [self createSingleWindowShot:selectedWindowID];
+        
+        NSMutableDictionary *cmd = [NSMutableDictionary new];
+        NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        NSString *cmdCoordinate = @"";
+        NSString *cmdID = [NSString stringWithFormat:@"Thread.sleep(%@ * 1000);", input.stringValue];
+        NSLog(@"%@", cmdID);
+        
+        [cmd setValue:outputView.image forKey:@"image"];
+        [cmd setValue:cmdNumber forKey:@"cmdNumber"];
+        [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
+        [cmd setValue:cmdID forKey:@"cmdID"];
+        [cmdList addObject:cmd];
+        
+        [self updateCommandList];
+    }
 }
 
 - (IBAction)toggleFramingEffects:(id)sender {

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8D581EAB1F9DBA8600BD4F24 /* Close.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D581EA71F9DBA8600BD4F24 /* Close.png */; };
+		8D581EAC1F9DBA8600BD4F24 /* Down.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D581EA81F9DBA8600BD4F24 /* Down.png */; };
+		8D581EAD1F9DBA8600BD4F24 /* Plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D581EA91F9DBA8600BD4F24 /* Plus.png */; };
+		8D581EAE1F9DBA8600BD4F24 /* Up.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D581EAA1F9DBA8600BD4F24 /* Up.png */; };
 		8DA240BF1F7CB80A0082D90F /* SecurityKeypadMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA240BE1F7CB80A0082D90F /* SecurityKeypadMap.m */; };
 		EA2685791F7384DF003BC6CE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2685781F7384DF003BC6CE /* AppDelegate.m */; };
 		EA26857E1F7384DF003BC6CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA26857D1F7384DF003BC6CE /* Assets.xcassets */; };
@@ -35,6 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8D581EA71F9DBA8600BD4F24 /* Close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Close.png; sourceTree = "<group>"; };
+		8D581EA81F9DBA8600BD4F24 /* Down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Down.png; sourceTree = "<group>"; };
+		8D581EA91F9DBA8600BD4F24 /* Plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Plus.png; sourceTree = "<group>"; };
+		8D581EAA1F9DBA8600BD4F24 /* Up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Up.png; sourceTree = "<group>"; };
 		8DA240BD1F7CB80A0082D90F /* SecurityKeypadMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SecurityKeypadMap.h; path = Classes/SecurityKeypadMap.h; sourceTree = "<group>"; };
 		8DA240BE1F7CB80A0082D90F /* SecurityKeypadMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SecurityKeypadMap.m; path = Classes/SecurityKeypadMap.m; sourceTree = "<group>"; };
 		EA2685741F7384DF003BC6CE /* f4ium-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "f4ium-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +91,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8D581EA61F9DBA8600BD4F24 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				8D581EA71F9DBA8600BD4F24 /* Close.png */,
+				8D581EA81F9DBA8600BD4F24 /* Down.png */,
+				8D581EA91F9DBA8600BD4F24 /* Plus.png */,
+				8D581EAA1F9DBA8600BD4F24 /* Up.png */,
+			);
+			name = images;
+			path = Resources/images;
+			sourceTree = "<group>";
+		};
 		EA26856B1F7384DF003BC6CE = {
 			isa = PBXGroup;
 			children = (
@@ -181,6 +201,7 @@
 		EACDE4CF1F79E89500CF0E0F /* images */ = {
 			isa = PBXGroup;
 			children = (
+				8D581EA61F9DBA8600BD4F24 /* images */,
 			);
 			name = images;
 			sourceTree = "<group>";
@@ -267,8 +288,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D581EAE1F9DBA8600BD4F24 /* Up.png in Resources */,
+				8D581EAD1F9DBA8600BD4F24 /* Plus.png in Resources */,
+				8D581EAB1F9DBA8600BD4F24 /* Close.png in Resources */,
 				EA2685B11F738863003BC6CE /* Info.plist in Resources */,
 				EA2685AA1F738737003BC6CE /* StepCollectionViewItem.xib in Resources */,
+				8D581EAC1F9DBA8600BD4F24 /* Down.png in Resources */,
 				EA26857E1F7384DF003BC6CE /* Assets.xcassets in Resources */,
 				EA2685811F7384DF003BC6CE /* MainMenu.xib in Resources */,
 			);

@@ -13,7 +13,8 @@
 @end
 
 @implementation StepCollectionViewItem
-@synthesize txtTitle, imgView, radioCoordinate, radioID, tfCmdCooridatenate, tfCmdID, tfComment, cancelBtn;
+@synthesize txtTitle, imgView, radioCoordinate, radioID, tfCmdCooridatenate, tfCmdID, tfComment;
+@synthesize btnMoveUp, btnMoveDown, btnAddEvent, btnRemoveEvent;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -29,7 +30,10 @@
         [imgView setImage:[representedObject valueForKey:@"image"]];
         [tfCmdCooridatenate setStringValue:[representedObject valueForKey:@"cmdCoordinate"]];
         [tfCmdID setStringValue:[representedObject valueForKey:@"cmdID"]];
-        [cancelBtn setTag:[[representedObject valueForKey:@"cmdNumber"] integerValue]];
+        [btnMoveUp setTag:[[representedObject valueForKey:@"cmdNumber"] integerValue]];
+        [btnMoveDown setTag:[[representedObject valueForKey:@"cmdNumber"] integerValue]];
+        [btnAddEvent setTag:[[representedObject valueForKey:@"cmdNumber"] integerValue]];
+        [btnRemoveEvent setTag:[[representedObject valueForKey:@"cmdNumber"] integerValue]];
         
         if ([representedObject valueForKey:@"comment"] != nil)
             [tfComment setStringValue:[representedObject valueForKey:@"commment"]];
