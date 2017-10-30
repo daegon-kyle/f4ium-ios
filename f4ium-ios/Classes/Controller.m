@@ -593,10 +593,10 @@ NSString *kvoContext = @"f4ium-iosContext";
 
 - (void)addEventAction:(NSClickGestureRecognizer *)sender {
     int tag = (int)[(NSButton*)sender.view tag];
-    cmdInsertLocation = tag-1;
+    cmdInsertLocation = tag; // 현재 위치에 삽입하므로 -1 하지 않음
     
     NSMenu *ctxMenu = [[NSMenu alloc] initWithTitle:@"Add Event"];
-    [ctxMenu insertItemWithTitle:@"Normal Keypad Input" action:@selector(generateNormalKeypadInput:) keyEquivalent:@"" atIndex:0];
+    [ctxMenu insertItemWithTitle:@"Normal Keypad Input" action:@selector(insertNormalKeypadInput:) keyEquivalent:@"" atIndex:0];
     [ctxMenu insertItemWithTitle:@"Security Keypad Input" action:@selector(generateSecurityKeypadInput:) keyEquivalent:@"" atIndex:1];
     [ctxMenu insertItemWithTitle:@"System Keypad Input" action:@selector(generateSystemKeypadInput:) keyEquivalent:@"" atIndex:2];
     [ctxMenu insertItem:NSMenuItem.separatorItem atIndex:3];
@@ -896,10 +896,14 @@ NSString *kvoContext = @"f4ium-iosContext";
 }
 
 - (IBAction)appendNormalKeypadInput:(id)sender {
-    [self generateNormalKeypadInput:sender];
+    [self generateNormalKeypadInput:sender insertEnabled:NO];
 }
 
-- (IBAction)generateNormalKeypadInput:(id)sender {
+- (IBAction)insertNormalKeypadInput:(id)sender {
+    [self generateNormalKeypadInput:sender insertEnabled:YES];
+}
+
+- (void)generateNormalKeypadInput:(id)sender insertEnabled:(BOOL)bInsert {
     if (![self checkLastRetrievedID])
         return;
     
@@ -919,6 +923,8 @@ NSString *kvoContext = @"f4ium-iosContext";
         
         NSMutableDictionary *cmd = [NSMutableDictionary new];
         NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        if (bInsert)
+            cmdNumber = [NSString stringWithFormat:@"%d", cmdInsertLocation+1];
         NSString *cmdCoordinate = @"";
         NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).sendKeys(\"%@\");", lastRetrievedID, input.stringValue];
         NSLog(@"%@", cmdID);
@@ -927,7 +933,21 @@ NSString *kvoContext = @"f4ium-iosContext";
         [cmd setValue:cmdNumber forKey:@"cmdNumber"];
         [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
         [cmd setValue:cmdID forKey:@"cmdID"];
-        [cmdList addObject:cmd];
+        if (bInsert) {
+            [cmdList insertObject:cmd atIndex:cmdInsertLocation];
+            
+            for (int i = cmdInsertLocation+1; i < cmdList.count; i++) {
+                NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
+                [cmd setValue:[NSString stringWithFormat:@"%d", i+1] forKey:@"cmdNumber"];
+                
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i-1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", i+1]];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i-1])).btnMoveUp setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i-1])).btnMoveDown setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i-1])).btnAddEvent setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i-1])).btnRemoveEvent setTag:i+1];
+            }
+        } else
+            [cmdList addObject:cmd];
         
         [self updateCommandList];
     }
