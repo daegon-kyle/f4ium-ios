@@ -25,6 +25,7 @@
 		EA2685AA1F738737003BC6CE /* StepCollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA2685A61F738737003BC6CE /* StepCollectionViewItem.xib */; };
 		EA2685AD1F73874D003BC6CE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2685AB1F73874D003BC6CE /* main.m */; };
 		EA2685B11F738863003BC6CE /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EA2685B01F738863003BC6CE /* Info.plist */; };
+		EA2A01121FA7188C00E8B7E7 /* Copy.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2A01111FA7188C00E8B7E7 /* Copy.png */; };
 		EA6EEA4E1F7B422E00F28370 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA6EEA4D1F7B422E00F28370 /* AppKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,7 @@
 		EA2685AB1F73874D003BC6CE /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "Other Sources/main.m"; sourceTree = "<group>"; };
 		EA2685AC1F73874D003BC6CE /* SonOfGrab_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SonOfGrab_Prefix.pch; path = "Other Sources/SonOfGrab_Prefix.pch"; sourceTree = "<group>"; };
 		EA2685B01F738863003BC6CE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EA2A01111FA7188C00E8B7E7 /* Copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Copy.png; sourceTree = "<group>"; };
 		EA6EEA4D1F7B422E00F28370 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -94,6 +96,7 @@
 		8D581EA61F9DBA8600BD4F24 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				EA2A01111FA7188C00E8B7E7 /* Copy.png */,
 				8D581EA71F9DBA8600BD4F24 /* Close.png */,
 				8D581EA81F9DBA8600BD4F24 /* Down.png */,
 				8D581EA91F9DBA8600BD4F24 /* Plus.png */,
@@ -288,6 +291,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA2A01121FA7188C00E8B7E7 /* Copy.png in Resources */,
 				8D581EAE1F9DBA8600BD4F24 /* Up.png in Resources */,
 				8D581EAD1F9DBA8600BD4F24 /* Plus.png in Resources */,
 				8D581EAB1F9DBA8600BD4F24 /* Close.png in Resources */,

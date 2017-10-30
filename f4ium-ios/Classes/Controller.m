@@ -518,6 +518,13 @@ NSString *kvoContext = @"f4ium-iosContext";
     click.action = @selector(addEventAction:);
     [btnAddEvent addGestureRecognizer:click];
     
+    NSButton *btnCopyEvent = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnCopyEvent;
+    click = [[NSClickGestureRecognizer alloc] init];
+    click.target = self;
+    click.numberOfClicksRequired = 1;
+    click.action = @selector(copyEventAction:);
+    [btnCopyEvent addGestureRecognizer:click];
+    
     NSButton *btnRemoveEvent = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnRemoveEvent;
     click = [[NSClickGestureRecognizer alloc] init];
     click.target = self;
@@ -545,6 +552,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnMoveUp setTag:index+1];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnMoveDown setTag:index+1];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnAddEvent setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnCopyEvent setTag:index+1];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnRemoveEvent setTag:index+1];
     
     NSMutableDictionary *current = [cmdList objectAtIndex:index];
@@ -553,6 +561,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveUp setTag:index];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveDown setTag:index];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnAddEvent setTag:index];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnCopyEvent setTag:index];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnRemoveEvent setTag:index];
     
     [cmdList replaceObjectAtIndex:index-1 withObject:current];
@@ -574,6 +583,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnMoveUp setTag:index+1];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnMoveDown setTag:index+1];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnAddEvent setTag:index+1];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnCopyEvent setTag:index+1];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnRemoveEvent setTag:index+1];
     
     NSMutableDictionary *current = [cmdList objectAtIndex:index];
@@ -582,6 +592,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveUp setTag:index+2];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveDown setTag:index+2];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnAddEvent setTag:index+2];
+    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnCopyEvent setTag:index+2];
     [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnRemoveEvent setTag:index+2];
     
     [cmdList replaceObjectAtIndex:index+1 withObject:current];
@@ -612,6 +623,25 @@ NSString *kvoContext = @"f4ium-iosContext";
     [NSMenu popUpContextMenu:ctxMenu withEvent:event forView:sender.view];
 }
 
+- (void)copyEventAction:(NSClickGestureRecognizer *)sender {
+    NSPasteboard *nspb = [NSPasteboard generalPasteboard];
+    
+    int tag = (int)[(NSButton*)sender.view tag];
+    int index = tag-1;
+    NSInteger totalCmdCount = [cmdList count];
+    
+    if (totalCmdCount > index) {
+        [nspb clearContents];
+        StepCollectionViewItem *stepItem = (StepCollectionViewItem *)[collectionView itemAtIndex:index];
+        
+        if (stepItem.radioCoordinate.state == NSOnState) {
+            [nspb setString:stepItem.tfCmdCooridatenate.stringValue forType:NSStringPboardType];
+        } else {
+            [nspb setString:stepItem.tfCmdID.stringValue forType:NSStringPboardType];
+        }
+    }
+}
+
 - (void)removeEventAction:(NSClickGestureRecognizer *)sender {
     int tag = (int)[(NSButton*)sender.view tag];
     int index = tag-1;
@@ -630,6 +660,7 @@ NSString *kvoContext = @"f4ium-iosContext";
                 [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnMoveUp setTag:i+1];
                 [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnMoveDown setTag:i+1];
                 [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnAddEvent setTag:i+1];
+                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnCopyEvent setTag:i+1];
                 [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnRemoveEvent setTag:i+1];
             }
             [cmdList removeObjectAtIndex:totalCmdCount-1];

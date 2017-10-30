@@ -14,7 +14,7 @@
 
 @implementation StepCollectionViewItem
 @synthesize txtTitle, imgView, radioCoordinate, radioID, tfCmdCooridatenate, tfCmdID, tfComment;
-@synthesize btnMoveUp, btnMoveDown, btnAddEvent, btnRemoveEvent;
+@synthesize btnMoveUp, btnMoveDown, btnAddEvent, btnCopyEvent, btnRemoveEvent;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -33,6 +33,7 @@
         [btnMoveUp setTag:[[representedObject valueForKey:@"cmdNumber"] integerValue]];
         [btnMoveDown setTag:[[representedObject valueForKey:@"cmdNumber"] integerValue]];
         [btnAddEvent setTag:[[representedObject valueForKey:@"cmdNumber"] integerValue]];
+        [btnCopyEvent setTag:[[representedObject valueForKey:@"cmdNumber"] integerValue]];
         [btnRemoveEvent setTag:[[representedObject valueForKey:@"cmdNumber"] integerValue]];
         
         if ([representedObject valueForKey:@"comment"] != nil)

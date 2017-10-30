@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="StepCollectionViewItem">
             <connections>
                 <outlet property="btnAddEvent" destination="xJt-Vp-hXj" id="H0L-rk-jPH"/>
+                <outlet property="btnCopyEvent" destination="GnI-OT-Xvh" id="SsF-Zp-EtN"/>
                 <outlet property="btnMoveDown" destination="B4m-v7-8TF" id="Twv-XV-U3o"/>
                 <outlet property="btnMoveUp" destination="rDs-oe-CVp" id="J8Z-Yh-bsI"/>
                 <outlet property="btnRemoveEvent" destination="vF0-HH-by9" id="xwL-0w-08b"/>
@@ -59,15 +60,6 @@
                         <action selector="clickRadioID:" target="-2" id="UZ9-x8-D2m"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9OK-GR-KLJ">
-                    <rect key="frame" x="265" y="98" width="505" height="22"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="DDc-Am-dc0">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HqS-nh-pK6">
                     <rect key="frame" x="265" y="64" width="505" height="22"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -109,7 +101,7 @@
                     </buttonCell>
                 </button>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xJt-Vp-hXj">
-                    <rect key="frame" x="630" y="123" width="85" height="20"/>
+                    <rect key="frame" x="545" y="123" width="85" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="square" title="이벤트 추가" bezelStyle="shadowlessSquare" image="Plus" imagePosition="left" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Wl8-JK-7vk">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -117,7 +109,7 @@
                     </buttonCell>
                 </button>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rDs-oe-CVp">
-                    <rect key="frame" x="580" y="123" width="20" height="20"/>
+                    <rect key="frame" x="495" y="123" width="20" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Up" imagePosition="left" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="DcW-iV-wRv">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -125,19 +117,37 @@
                     </buttonCell>
                 </button>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B4m-v7-8TF">
-                    <rect key="frame" x="605" y="123" width="20" height="20"/>
+                    <rect key="frame" x="520" y="123" width="20" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Down" imagePosition="left" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="nmB-sf-yEL">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                 </button>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GnI-OT-Xvh">
+                    <rect key="frame" x="635" y="123" width="85" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" title="명령어 복사" bezelStyle="shadowlessSquare" image="Copy" imagePosition="left" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="k4j-Zl-Wqm">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9OK-GR-KLJ">
+                    <rect key="frame" x="265" y="98" width="505" height="22"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="DDc-Am-dc0">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <point key="canvasLocation" x="-153" y="152"/>
         </customView>
     </objects>
     <resources>
         <image name="Close" width="128" height="128"/>
+        <image name="Copy" width="87.599998474121094" height="87.599998474121094"/>
         <image name="Down" width="128" height="128"/>
         <image name="Plus" width="102.40000152587891" height="102.40000152587891"/>
         <image name="Up" width="128" height="128"/>

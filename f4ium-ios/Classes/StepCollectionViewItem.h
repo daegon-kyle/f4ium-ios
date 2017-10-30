@@ -19,6 +19,7 @@
 @property (weak) IBOutlet NSTextField *tfComment;
 @property (weak) IBOutlet NSButton *btnMoveUp;
 @property (weak) IBOutlet NSButton *btnMoveDown;
+@property (weak) IBOutlet NSButton *btnCopyEvent;
 @property (weak) IBOutlet NSButton *btnAddEvent;
 @property (weak) IBOutlet NSButton *btnRemoveEvent;
 
