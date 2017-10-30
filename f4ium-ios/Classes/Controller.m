@@ -69,6 +69,7 @@ extern SOLogger *gLogger;
     NSString *lastRetrievedID;
     
     NSMutableArray *cmdList;
+    int cmdInsertLocation;
 }
 
 @property (weak) IBOutlet NSButton * imageFramingEffects;
@@ -591,6 +592,9 @@ NSString *kvoContext = @"f4ium-iosContext";
 }
 
 - (void)addEventAction:(NSClickGestureRecognizer *)sender {
+    int tag = (int)[(NSButton*)sender.view tag];
+    cmdInsertLocation = tag-1;
+    
     NSMenu *ctxMenu = [[NSMenu alloc] initWithTitle:@"Add Event"];
     [ctxMenu insertItemWithTitle:@"Normal Keypad Input" action:@selector(generateNormalKeypadInput:) keyEquivalent:@"" atIndex:0];
     [ctxMenu insertItemWithTitle:@"Security Keypad Input" action:@selector(generateSecurityKeypadInput:) keyEquivalent:@"" atIndex:1];
@@ -891,6 +895,10 @@ NSString *kvoContext = @"f4ium-iosContext";
     return NO;
 }
 
+- (IBAction)appendNormalKeypadInput:(id)sender {
+    [self generateNormalKeypadInput:sender];
+}
+
 - (IBAction)generateNormalKeypadInput:(id)sender {
     if (![self checkLastRetrievedID])
         return;
@@ -923,6 +931,10 @@ NSString *kvoContext = @"f4ium-iosContext";
         
         [self updateCommandList];
     }
+}
+
+- (IBAction)appendSecurityKeypadInput:(id)sender {
+    [self generateSecurityKeypadInput:sender];
 }
 
 - (IBAction)generateSecurityKeypadInput:(id)sender {
@@ -1051,6 +1063,10 @@ NSString *kvoContext = @"f4ium-iosContext";
     }
 }
 
+- (IBAction)appendSystemKeypadInput:(id)sender {
+    [self generateSystemKeypadInput:sender];
+}
+
 - (IBAction)generateSystemKeypadInput:(id)sender {
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setMessageText:@"생성할 시스템 키패드 메시지를 선택해주세요."];
@@ -1080,6 +1096,10 @@ NSString *kvoContext = @"f4ium-iosContext";
         
         [self updateCommandList];
     }
+}
+
+- (IBAction)appendDelayEvent:(id)sender {
+    [self generateDelayEvent:sender];
 }
 
 - (IBAction)generateDelayEvent:(id)sender {
