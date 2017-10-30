@@ -643,6 +643,13 @@ NSString *kvoContext = @"f4ium-iosContext";
         } else {
             [nspb setString:stepItem.tfCmdID.stringValue forType:NSStringPboardType];
         }
+        
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"복사완료"];
+        [alert setInformativeText:[nspb stringForType:NSStringPboardType]];
+        [alert addButtonWithTitle:@"확인"];
+        [alert setAlertStyle:NSAlertStyleWarning];
+        [alert runModal];
     }
 }
 
