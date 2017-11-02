@@ -1376,7 +1376,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     if (cmdList.count == 0) {
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:@"알림"];
-        [alert setInformativeText:@"내보내기할 명령어가 없습니다."];
+        [alert setInformativeText:@"송신할 명령어가 없습니다."];
         [alert addButtonWithTitle:@"확인"];
         [alert setAlertStyle:NSAlertStyleWarning];
         [alert runModal];
