@@ -498,46 +498,60 @@ NSString *kvoContext = @"f4ium-iosContext";
 - (void)updateCommandList {
     [collectionView setContent:cmdList];
     
-    NSButton *btnMoveUp = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnMoveUp;
-    NSClickGestureRecognizer *click = [[NSClickGestureRecognizer alloc] init];
-    click.target = self;
-    click.numberOfClicksRequired = 1;
-    click.action = @selector(moveUpAction:);
-    [btnMoveUp addGestureRecognizer:click];
-    
-    NSButton *btnMoveDown = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnMoveDown;
-    click = [[NSClickGestureRecognizer alloc] init];
-    click.target = self;
-    click.numberOfClicksRequired = 1;
-    click.action = @selector(moveDownAction:);
-    [btnMoveDown addGestureRecognizer:click];
-    
-    NSButton *btnAddEvent = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnAddEvent;
-    click = [[NSClickGestureRecognizer alloc] init];
-    click.target = self;
-    click.numberOfClicksRequired = 1;
-    click.action = @selector(addEventAction:);
-    [btnAddEvent addGestureRecognizer:click];
-    
-    NSButton *btnCopyEvent = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnCopyEvent;
-    click = [[NSClickGestureRecognizer alloc] init];
-    click.target = self;
-    click.numberOfClicksRequired = 1;
-    click.action = @selector(copyEventAction:);
-    [btnCopyEvent addGestureRecognizer:click];
-    
-    NSButton *btnRemoveEvent = ((StepCollectionViewItem*)([collectionView itemAtIndex:cmdList.count-1])).btnRemoveEvent;
-    click = [[NSClickGestureRecognizer alloc] init];
-    click.target = self;
-    click.numberOfClicksRequired = 1;
-    click.action = @selector(removeEventAction:);
-    [btnRemoveEvent addGestureRecognizer:click];
+    NSClickGestureRecognizer *click = nil;
+    NSUInteger numberOfItems = collectionView.content.count;
+    for (NSUInteger itemIndex = 0; itemIndex < numberOfItems; itemIndex++) {
+        StepCollectionViewItem *item = (StepCollectionViewItem*)[collectionView itemAtIndex:itemIndex];
+        
+        if (item.btnMoveUp.gestureRecognizers.count > 0)
+            continue;
+        
+        click = [[NSClickGestureRecognizer alloc] init];
+        click.target = self;
+        click.numberOfClicksRequired = 1;
+        click.action = @selector(moveUpAction:);
+        [item.btnMoveUp addGestureRecognizer:click];
+        
+        click = [[NSClickGestureRecognizer alloc] init];
+        click.target = self;
+        click.numberOfClicksRequired = 1;
+        click.action = @selector(moveDownAction:);
+        [item.btnMoveDown addGestureRecognizer:click];
+        
+        click = [[NSClickGestureRecognizer alloc] init];
+        click.target = self;
+        click.numberOfClicksRequired = 1;
+        click.action = @selector(addEventAction:);
+        [item.btnAddEvent addGestureRecognizer:click];
+        
+        click = [[NSClickGestureRecognizer alloc] init];
+        click.target = self;
+        click.numberOfClicksRequired = 1;
+        click.action = @selector(copyEventAction:);
+        [item.btnCopyEvent addGestureRecognizer:click];
+        
+        click = [[NSClickGestureRecognizer alloc] init];
+        click.target = self;
+        click.numberOfClicksRequired = 1;
+        click.action = @selector(removeEventAction:);
+        [item.btnRemoveEvent addGestureRecognizer:click];
+    }
     
     if (cmdList.count > 0) {
         NSRect rect = collectionView.enclosingScrollView.frame;
         rect.origin.y += (cmdList.count-1) * rect.size.height;
         [collectionView scrollRectToVisible:rect];
     }
+}
+
+- (void)changeItemNumberTo:(int)newNum atIndex:(int)index {
+    StepCollectionViewItem *item = (StepCollectionViewItem*)[collectionView itemAtIndex:index];
+    [item.txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", newNum]];
+    [item.btnMoveUp setTag:newNum];
+    [item.btnMoveDown setTag:newNum];
+    [item.btnAddEvent setTag:newNum];
+    [item.btnCopyEvent setTag:newNum];
+    [item.btnRemoveEvent setTag:newNum];
 }
 
 - (void)moveUpAction:(NSClickGestureRecognizer *)sender {
@@ -549,25 +563,14 @@ NSString *kvoContext = @"f4ium-iosContext";
     
     NSMutableDictionary *prev = [cmdList objectAtIndex:index-1];
     [prev setValue:[NSString stringWithFormat:@"%d", index+1] forKey:@"cmdNumber"];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index+1]];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnMoveUp setTag:index+1];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnMoveDown setTag:index+1];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnAddEvent setTag:index+1];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnCopyEvent setTag:index+1];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index-1])).btnRemoveEvent setTag:index+1];
+    [self changeItemNumberTo:index+1 atIndex:index-1];
     
     NSMutableDictionary *current = [cmdList objectAtIndex:index];
     [current setValue:[NSString stringWithFormat:@"%d", index] forKey:@"cmdNumber"];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index]];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveUp setTag:index];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveDown setTag:index];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnAddEvent setTag:index];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnCopyEvent setTag:index];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnRemoveEvent setTag:index];
+    [self changeItemNumberTo:index atIndex:index];
     
     [cmdList replaceObjectAtIndex:index-1 withObject:current];
     [cmdList replaceObjectAtIndex:index withObject:prev];
-    
     [collectionView setContent:cmdList];
 }
 
@@ -580,25 +583,14 @@ NSString *kvoContext = @"f4ium-iosContext";
     
     NSMutableDictionary *next = [cmdList objectAtIndex:index+1];
     [next setValue:[NSString stringWithFormat:@"%d", index+1] forKey:@"cmdNumber"];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index+1]];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnMoveUp setTag:index+1];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnMoveDown setTag:index+1];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnAddEvent setTag:index+1];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnCopyEvent setTag:index+1];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index+1])).btnRemoveEvent setTag:index+1];
+    [self changeItemNumberTo:index+1 atIndex:index+1];
     
     NSMutableDictionary *current = [cmdList objectAtIndex:index];
     [current setValue:[NSString stringWithFormat:@"%d", index+2] forKey:@"cmdNumber"];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", index+2]];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveUp setTag:index+2];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnMoveDown setTag:index+2];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnAddEvent setTag:index+2];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnCopyEvent setTag:index+2];
-    [((StepCollectionViewItem*)([collectionView itemAtIndex:index])).btnRemoveEvent setTag:index+2];
+    [self changeItemNumberTo:index+2 atIndex:index];
     
     [cmdList replaceObjectAtIndex:index+1 withObject:current];
     [cmdList replaceObjectAtIndex:index withObject:next];
-    
     [collectionView setContent:cmdList];
 }
 
@@ -608,10 +600,10 @@ NSString *kvoContext = @"f4ium-iosContext";
     
     NSMenu *ctxMenu = [[NSMenu alloc] initWithTitle:@"Add Event"];
     [ctxMenu insertItemWithTitle:@"Normal Keypad Input" action:@selector(insertNormalKeypadInput:) keyEquivalent:@"" atIndex:0];
-    [ctxMenu insertItemWithTitle:@"Security Keypad Input" action:@selector(generateSecurityKeypadInput:) keyEquivalent:@"" atIndex:1];
-    [ctxMenu insertItemWithTitle:@"System Keypad Input" action:@selector(generateSystemKeypadInput:) keyEquivalent:@"" atIndex:2];
+    [ctxMenu insertItemWithTitle:@"Security Keypad Input" action:@selector(insertSecurityKeypadInput:) keyEquivalent:@"" atIndex:1];
+    [ctxMenu insertItemWithTitle:@"System Keypad Input" action:@selector(insertSystemKeypadInput:) keyEquivalent:@"" atIndex:2];
     [ctxMenu insertItem:NSMenuItem.separatorItem atIndex:3];
-    [ctxMenu insertItemWithTitle:@"Delay Event" action:@selector(generateDelayEvent:) keyEquivalent:@"" atIndex:4];
+    [ctxMenu insertItemWithTitle:@"Delay Event" action:@selector(insertDelayEvent:) keyEquivalent:@"" atIndex:4];
     CGPoint location = [sender.view convertRect:sender.view.bounds toView:nil].origin;
     location.x += [sender locationInView:sender.view].x;
     location.y += [sender locationInView:sender.view].y;
@@ -665,14 +657,8 @@ NSString *kvoContext = @"f4ium-iosContext";
             for (int i = index; i < totalCmdCount-1; i++) {
                 NSMutableDictionary *cmd = [cmdList objectAtIndex:i+1];
                 [cmd setValue:[NSString stringWithFormat:@"%d", i+1] forKey:@"cmdNumber"];
+                [self changeItemNumberTo:i+1 atIndex:i+1];
                 [cmdList replaceObjectAtIndex:i withObject:cmd];
-                
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", i+1]];
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnMoveUp setTag:i+1];
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnMoveDown setTag:i+1];
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnAddEvent setTag:i+1];
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnCopyEvent setTag:i+1];
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i+1])).btnRemoveEvent setTag:i+1];
             }
             [cmdList removeObjectAtIndex:totalCmdCount-1];
         }
@@ -972,18 +958,12 @@ NSString *kvoContext = @"f4ium-iosContext";
         [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
         [cmd setValue:cmdID forKey:@"cmdID"];
         if (bInsert) {
-            [cmdList insertObject:cmd atIndex:cmdInsertLocation];
-            
-            for (int i = cmdInsertLocation+1; i < cmdList.count; i++) {
+            for (int i = cmdInsertLocation; i < cmdList.count; i++) {
                 NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
-                [cmd setValue:[NSString stringWithFormat:@"%d", i+1] forKey:@"cmdNumber"];
-                
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i-1])).txtTitle setStringValue:[NSString stringWithFormat:@"Step #%d", i+1]];
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i-1])).btnMoveUp setTag:i+1];
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i-1])).btnMoveDown setTag:i+1];
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i-1])).btnAddEvent setTag:i+1];
-                [((StepCollectionViewItem*)([collectionView itemAtIndex:i-1])).btnRemoveEvent setTag:i+1];
+                [cmd setValue:[NSString stringWithFormat:@"%d", i+2] forKey:@"cmdNumber"];
+                [self changeItemNumberTo:i+2 atIndex:i];
             }
+            [cmdList insertObject:cmd atIndex:cmdInsertLocation];
         } else
             [cmdList addObject:cmd];
         
@@ -992,10 +972,14 @@ NSString *kvoContext = @"f4ium-iosContext";
 }
 
 - (IBAction)appendSecurityKeypadInput:(id)sender {
-    [self generateSecurityKeypadInput:sender];
+    [self generateSecurityKeypadInput:sender insertEnabled:NO];
 }
 
-- (IBAction)generateSecurityKeypadInput:(id)sender {
+- (IBAction)insertSecurityKeypadInput:(id)sender {
+    [self generateSecurityKeypadInput:sender insertEnabled:YES];
+}
+
+- (IBAction)generateSecurityKeypadInput:(id)sender insertEnabled:(BOOL)bInsert {
     SecurityKeypadMap *secKeyMap = [SecurityKeypadMap sharedSecurityKeyMap];
     
     NSAlert *alert = [[NSAlert alloc] init];
@@ -1019,6 +1003,8 @@ NSString *kvoContext = @"f4ium-iosContext";
             if ((chr >= 'a' && chr <= 'z') || (chr >= '0' && chr <= '9')) {
                 NSMutableDictionary *cmd = [NSMutableDictionary new];
                 NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                if (bInsert)
+                    cmdNumber = [NSString stringWithFormat:@"%d", cmdInsertLocation+1];
                 NSString *cmdCoordinate = @"";
                 NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", [secKeyMap retrieveID:substr]];
                 NSLog(@"%@", cmdID);
@@ -1027,11 +1013,23 @@ NSString *kvoContext = @"f4ium-iosContext";
                 [cmd setValue:cmdNumber forKey:@"cmdNumber"];
                 [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
                 [cmd setValue:cmdID forKey:@"cmdID"];
-                [cmdList addObject:cmd];
+                if (bInsert) {
+                    for (int i = cmdInsertLocation; i < cmdList.count; i++) {
+                        NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
+                        [cmd setValue:[NSString stringWithFormat:@"%d", i+2] forKey:@"cmdNumber"];
+                        [self changeItemNumberTo:i+2 atIndex:i];
+                    }
+                    [cmdList insertObject:cmd atIndex:cmdInsertLocation];
+                    cmdInsertLocation++;
+                } else
+                    [cmdList addObject:cmd];
+                [self updateCommandList];
                 
             } else if (chr >= 'A' && chr <= 'Z') {
                 NSMutableDictionary *cmd = [NSMutableDictionary new];
                 NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                if (bInsert)
+                    cmdNumber = [NSString stringWithFormat:@"%d", cmdInsertLocation+1];
                 NSString *cmdCoordinate = @"";
                 NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"대소문자 변경"];
                 NSLog(@"%@", cmdID);
@@ -1040,10 +1038,22 @@ NSString *kvoContext = @"f4ium-iosContext";
                 [cmd setValue:cmdNumber forKey:@"cmdNumber"];
                 [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
                 [cmd setValue:cmdID forKey:@"cmdID"];
-                [cmdList addObject:cmd];
+                if (bInsert) {
+                    for (int i = cmdInsertLocation; i < cmdList.count; i++) {
+                        NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
+                        [cmd setValue:[NSString stringWithFormat:@"%d", i+2] forKey:@"cmdNumber"];
+                        [self changeItemNumberTo:i+2 atIndex:i];
+                    }
+                    [cmdList insertObject:cmd atIndex:cmdInsertLocation];
+                    cmdInsertLocation++;
+                } else
+                    [cmdList addObject:cmd];
+                [self updateCommandList];
                 
                 cmd = [NSMutableDictionary new];
                 cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                if (bInsert)
+                    cmdNumber = [NSString stringWithFormat:@"%d", cmdInsertLocation+1];
                 cmdCoordinate = @"";
                 cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", [secKeyMap retrieveID:substr]];
                 NSLog(@"%@", cmdID);
@@ -1052,10 +1062,22 @@ NSString *kvoContext = @"f4ium-iosContext";
                 [cmd setValue:cmdNumber forKey:@"cmdNumber"];
                 [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
                 [cmd setValue:cmdID forKey:@"cmdID"];
-                [cmdList addObject:cmd];
+                if (bInsert) {
+                    for (int i = cmdInsertLocation; i < cmdList.count; i++) {
+                        NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
+                        [cmd setValue:[NSString stringWithFormat:@"%d", i+2] forKey:@"cmdNumber"];
+                        [self changeItemNumberTo:i+2 atIndex:i];
+                    }
+                    [cmdList insertObject:cmd atIndex:cmdInsertLocation];
+                    cmdInsertLocation++;
+                } else
+                    [cmdList addObject:cmd];
+                [self updateCommandList];
                 
                 cmd = [NSMutableDictionary new];
                 cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                if (bInsert)
+                    cmdNumber = [NSString stringWithFormat:@"%d", cmdInsertLocation+1];
                 cmdCoordinate = @"";
                 cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"대소문자 변경"];
                 NSLog(@"%@", cmdID);
@@ -1064,11 +1086,23 @@ NSString *kvoContext = @"f4ium-iosContext";
                 [cmd setValue:cmdNumber forKey:@"cmdNumber"];
                 [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
                 [cmd setValue:cmdID forKey:@"cmdID"];
-                [cmdList addObject:cmd];
+                if (bInsert) {
+                    for (int i = cmdInsertLocation; i < cmdList.count; i++) {
+                        NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
+                        [cmd setValue:[NSString stringWithFormat:@"%d", i+2] forKey:@"cmdNumber"];
+                        [self changeItemNumberTo:i+2 atIndex:i];
+                    }
+                    [cmdList insertObject:cmd atIndex:cmdInsertLocation];
+                    cmdInsertLocation++;
+                } else
+                    [cmdList addObject:cmd];
+                [self updateCommandList];
                 
             } else { // 특수문자
                 NSMutableDictionary *cmd = [NSMutableDictionary new];
                 NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                if (bInsert)
+                    cmdNumber = [NSString stringWithFormat:@"%d", cmdInsertLocation+1];
                 NSString *cmdCoordinate = @"";
                 NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"특수문자 변경"];
                 NSLog(@"%@", cmdID);
@@ -1077,10 +1111,22 @@ NSString *kvoContext = @"f4ium-iosContext";
                 [cmd setValue:cmdNumber forKey:@"cmdNumber"];
                 [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
                 [cmd setValue:cmdID forKey:@"cmdID"];
-                [cmdList addObject:cmd];
+                if (bInsert) {
+                    for (int i = cmdInsertLocation; i < cmdList.count; i++) {
+                        NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
+                        [cmd setValue:[NSString stringWithFormat:@"%d", i+2] forKey:@"cmdNumber"];
+                        [self changeItemNumberTo:i+2 atIndex:i];
+                    }
+                    [cmdList insertObject:cmd atIndex:cmdInsertLocation];
+                    cmdInsertLocation++;
+                } else
+                    [cmdList addObject:cmd];
+                [self updateCommandList];
                 
                 cmd = [NSMutableDictionary new];
                 cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                if (bInsert)
+                    cmdNumber = [NSString stringWithFormat:@"%d", cmdInsertLocation+1];
                 cmdCoordinate = @"";
                 cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", [secKeyMap retrieveID:substr]];
                 NSLog(@"%@", cmdID);
@@ -1089,10 +1135,22 @@ NSString *kvoContext = @"f4ium-iosContext";
                 [cmd setValue:cmdNumber forKey:@"cmdNumber"];
                 [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
                 [cmd setValue:cmdID forKey:@"cmdID"];
-                [cmdList addObject:cmd];
+                if (bInsert) {
+                    for (int i = cmdInsertLocation; i < cmdList.count; i++) {
+                        NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
+                        [cmd setValue:[NSString stringWithFormat:@"%d", i+2] forKey:@"cmdNumber"];
+                        [self changeItemNumberTo:i+2 atIndex:i];
+                    }
+                    [cmdList insertObject:cmd atIndex:cmdInsertLocation];
+                    cmdInsertLocation++;
+                } else
+                    [cmdList addObject:cmd];
+                [self updateCommandList];
                 
                 cmd = [NSMutableDictionary new];
                 cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+                if (bInsert)
+                    cmdNumber = [NSString stringWithFormat:@"%d", cmdInsertLocation+1];
                 cmdCoordinate = @"";
                 cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"특수문자 변경"];
                 NSLog(@"%@", cmdID);
@@ -1101,12 +1159,24 @@ NSString *kvoContext = @"f4ium-iosContext";
                 [cmd setValue:cmdNumber forKey:@"cmdNumber"];
                 [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
                 [cmd setValue:cmdID forKey:@"cmdID"];
-                [cmdList addObject:cmd];
+                if (bInsert) {
+                    for (int i = cmdInsertLocation; i < cmdList.count; i++) {
+                        NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
+                        [cmd setValue:[NSString stringWithFormat:@"%d", i+2] forKey:@"cmdNumber"];
+                        [self changeItemNumberTo:i+2 atIndex:i];
+                    }
+                    [cmdList insertObject:cmd atIndex:cmdInsertLocation];
+                    cmdInsertLocation++;
+                } else
+                    [cmdList addObject:cmd];
+                [self updateCommandList];
             }
         }
         
         NSMutableDictionary *cmd = [NSMutableDictionary new];
         NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        if (bInsert)
+            cmdNumber = [NSString stringWithFormat:@"%d", cmdInsertLocation+1];
         NSString *cmdCoordinate = @"";
         NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", @"입력완료"];
         NSLog(@"%@", cmdID);
@@ -1115,17 +1185,29 @@ NSString *kvoContext = @"f4ium-iosContext";
         [cmd setValue:cmdNumber forKey:@"cmdNumber"];
         [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
         [cmd setValue:cmdID forKey:@"cmdID"];
-        [cmdList addObject:cmd];
+        if (bInsert) {
+            for (int i = cmdInsertLocation; i < cmdList.count; i++) {
+                NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
+                [cmd setValue:[NSString stringWithFormat:@"%d", i+2] forKey:@"cmdNumber"];
+                [self changeItemNumberTo:i+2 atIndex:i];
+            }
+            [cmdList insertObject:cmd atIndex:cmdInsertLocation];
+        } else
+            [cmdList addObject:cmd];
         
         [self updateCommandList];
     }
 }
 
 - (IBAction)appendSystemKeypadInput:(id)sender {
-    [self generateSystemKeypadInput:sender];
+    [self generateSystemKeypadInput:sender insertEnabled:NO];
 }
 
-- (IBAction)generateSystemKeypadInput:(id)sender {
+- (IBAction)insertSystemKeypadInput:(id)sender {
+    [self generateSystemKeypadInput:sender insertEnabled:YES];
+}
+
+- (IBAction)generateSystemKeypadInput:(id)sender insertEnabled:(BOOL)bInsert {
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setMessageText:@"생성할 시스템 키패드 메시지를 선택해주세요."];
     [alert addButtonWithTitle:@"확인"];
@@ -1142,6 +1224,8 @@ NSString *kvoContext = @"f4ium-iosContext";
         
         NSMutableDictionary *cmd = [NSMutableDictionary new];
         NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        if (bInsert)
+            cmdNumber = [NSString stringWithFormat:@"%d", cmdInsertLocation+1];
         NSString *cmdCoordinate = @"";
         NSString *cmdID = [NSString stringWithFormat:@"((MobileElement) driver.findElementByAccessibilityId(\"%@\")).click();", popupButton.titleOfSelectedItem];
         NSLog(@"%@", cmdID);
@@ -1150,17 +1234,29 @@ NSString *kvoContext = @"f4ium-iosContext";
         [cmd setValue:cmdNumber forKey:@"cmdNumber"];
         [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
         [cmd setValue:cmdID forKey:@"cmdID"];
-        [cmdList addObject:cmd];
+        if (bInsert) {
+            for (int i = cmdInsertLocation; i < cmdList.count; i++) {
+                NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
+                [cmd setValue:[NSString stringWithFormat:@"%d", i+2] forKey:@"cmdNumber"];
+                [self changeItemNumberTo:i+2 atIndex:i];
+            }
+            [cmdList insertObject:cmd atIndex:cmdInsertLocation];
+        } else
+            [cmdList addObject:cmd];
         
         [self updateCommandList];
     }
 }
 
 - (IBAction)appendDelayEvent:(id)sender {
-    [self generateDelayEvent:sender];
+    [self generateDelayEvent:sender insertEnabled:NO];
 }
 
-- (IBAction)generateDelayEvent:(id)sender {
+- (IBAction)insertDelayEvent:(id)sender {
+    [self generateDelayEvent:sender insertEnabled:YES];
+}
+
+- (IBAction)generateDelayEvent:(id)sender insertEnabled:(BOOL)bInsert {
     NSAlert *alert = [[NSAlert alloc] init];
     [alert setMessageText:@"시간지연을 초 단위로 입력해주세요."];
     [alert addButtonWithTitle:@"확인"];
@@ -1175,7 +1271,7 @@ NSString *kvoContext = @"f4ium-iosContext";
         NSCharacterSet *alphaNums = [NSCharacterSet decimalDigitCharacterSet];
         NSCharacterSet *inStringSet = [NSCharacterSet characterSetWithCharactersInString:input.stringValue];
         if (![alphaNums isSupersetOfSet:inStringSet]) {
-            [self generateDelayEvent:nil];
+            [self generateDelayEvent:sender insertEnabled:bInsert];
             return;
         }
         
@@ -1183,6 +1279,8 @@ NSString *kvoContext = @"f4ium-iosContext";
         
         NSMutableDictionary *cmd = [NSMutableDictionary new];
         NSString *cmdNumber = [NSString stringWithFormat:@"%ld", cmdList.count+1];
+        if (bInsert)
+            cmdNumber = [NSString stringWithFormat:@"%d", cmdInsertLocation+1];
         NSString *cmdCoordinate = @"";
         NSString *cmdID = [NSString stringWithFormat:@"Thread.sleep(%@ * 1000);", input.stringValue];
         NSLog(@"%@", cmdID);
@@ -1191,7 +1289,15 @@ NSString *kvoContext = @"f4ium-iosContext";
         [cmd setValue:cmdNumber forKey:@"cmdNumber"];
         [cmd setValue:cmdCoordinate forKey:@"cmdCoordinate"];
         [cmd setValue:cmdID forKey:@"cmdID"];
-        [cmdList addObject:cmd];
+        if (bInsert) {
+            for (int i = cmdInsertLocation; i < cmdList.count; i++) {
+                NSMutableDictionary *cmd = [cmdList objectAtIndex:i];
+                [cmd setValue:[NSString stringWithFormat:@"%d", i+2] forKey:@"cmdNumber"];
+                [self changeItemNumberTo:i+2 atIndex:i];
+            }
+            [cmdList insertObject:cmd atIndex:cmdInsertLocation];
+        } else
+            [cmdList addObject:cmd];
         
         [self updateCommandList];
     }
