@@ -1408,7 +1408,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager.requestSerializer setTimeoutInterval:2.0f];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    NSString *url = TEST_SEND_URL;
+    NSString *url = TEST_URL;
     
     [manager POST:url parameters:@{@"commands": commands} progress:nil
           success:^(NSURLSessionTask *task, id responseObject) {
@@ -1426,7 +1426,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager.requestSerializer setTimeoutInterval:2.0f];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    NSString *url = TEST_LOAD_URL;
+    NSString *url = TEST_URL;
     
     [manager POST:url parameters:nil progress:nil
           success:^(NSURLSessionTask *task, id responseObject) {
