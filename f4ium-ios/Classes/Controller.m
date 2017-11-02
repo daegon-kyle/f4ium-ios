@@ -11,6 +11,8 @@
 #import "SOLogger.h"
 #import "SecurityKeypadMap.h"
 #import <AppKit/NSClickGestureRecognizer.h>
+#import "AFNetworking.h"
+#import "F4ium-ios.h"
 
 extern SOLogger *gLogger;
 
@@ -1261,6 +1263,72 @@ NSString *kvoContext = @"f4ium-iosContext";
     // Refreshing the window list combines updating the window list and updating the window image.
     [self updateWindowList];
     [self updateImageWithSelection];
+}
+
+- (IBAction)sendCommands:(id)sender {
+#pragma unused(sender)
+    if (cmdList.count == 0) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"알림"];
+        [alert setInformativeText:@"내보내기할 명령어가 없습니다."];
+        [alert addButtonWithTitle:@"확인"];
+        [alert setAlertStyle:NSAlertStyleWarning];
+        [alert runModal];
+        return;
+    }
+    
+    NSMutableString *commands = [NSMutableString new];
+    for (int i = 0; i < collectionView.subviews.count; i++) {
+        StepCollectionViewItem *stepItem = (StepCollectionViewItem *)[collectionView itemAtIndex:i];
+        
+        [commands appendString:[NSString stringWithFormat:@"// Step #%d\n", i+1]];
+        if (stepItem.tfComment.stringValue.length > 0)
+            [commands appendString:[NSString stringWithFormat:@"// %@\n", stepItem.tfComment.stringValue]];
+        
+        if (stepItem.radioCoordinate.state == NSOnState) {
+            if (stepItem.tfCmdCooridatenate.stringValue.length > 0) {
+                [commands appendString:stepItem.tfCmdCooridatenate.stringValue];
+                [commands appendString:@"\n"];
+            }
+        } else {
+            if (stepItem.tfCmdID.stringValue.length > 0) {
+                [commands appendString:stepItem.tfCmdID.stringValue];
+                [commands appendString:@"\n"];
+            }
+        }
+    }
+    
+#pragma print response object or error for test
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager.requestSerializer setTimeoutInterval:2.0f];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    NSString *url = TEST_SEND_URL;
+    
+    [manager POST:url parameters:@{@"commands": commands} progress:nil
+          success:^(NSURLSessionTask *task, id responseObject) {
+              NSLog(@"success: %@", responseObject);
+          }
+          failure:^(NSURLSessionTask *task, NSError *error) {
+              NSLog(@"failure: %@", error);
+          }];
+}
+
+- (IBAction)LoadCommands:(id)sender {
+#pragma unused(sender)
+#pragma print response object or error for test
+#pragma change responseSerializer to AFJSONResponseSerializer in the futue
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager.requestSerializer setTimeoutInterval:2.0f];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    NSString *url = TEST_LOAD_URL;
+    
+    [manager POST:url parameters:nil progress:nil
+          success:^(NSURLSessionTask *task, id responseObject) {
+              NSLog(@"success: %@", responseObject);
+          }
+          failure:^(NSURLSessionTask *task, NSError *error) {
+              NSLog(@"failure: %@", error);
+          }];
 }
 
 @end

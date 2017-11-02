@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G1036" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1050" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -294,15 +294,15 @@
         <window title="Window List" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" topStrut="YES"/>
-            <rect key="contentRect" x="50" y="480" width="800" height="500"/>
+            <rect key="contentRect" x="50" y="480" width="800" height="540"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="800" height="378"/>
             <view key="contentView" misplaced="YES" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="800" height="500"/>
+                <rect key="frame" x="0.0" y="0.0" width="800" height="540"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="407">
-                        <rect key="frame" x="15" y="470" width="101" height="17"/>
+                        <rect key="frame" x="15" y="510" width="101" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Step 1:" id="408">
                             <font key="font" metaFont="system"/>
@@ -311,14 +311,14 @@
                         </textFieldCell>
                     </textField>
                     <scrollView misplaced="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="375">
-                        <rect key="frame" x="215" y="300" width="585" height="200"/>
+                        <rect key="frame" x="215" y="300" width="585" height="240"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" id="fGa-UB-4eP">
-                            <rect key="frame" x="1" y="0.0" width="583" height="199"/>
+                            <rect key="frame" x="1" y="0.0" width="583" height="239"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnSelection="YES" autosaveColumns="NO" headerView="379" id="378">
-                                    <rect key="frame" x="0.0" y="0.0" width="583" height="176"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="583" height="216"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -409,11 +409,11 @@
                             </subviews>
                         </clipView>
                         <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="377">
-                            <rect key="frame" x="1" y="183" width="583" height="16"/>
+                            <rect key="frame" x="1" y="223" width="583" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="376">
-                            <rect key="frame" x="568" y="23" width="16" height="176"/>
+                            <rect key="frame" x="568" y="23" width="16" height="216"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <tableHeaderView key="headerView" id="379">
@@ -422,7 +422,7 @@
                         </tableHeaderView>
                     </scrollView>
                     <button toolTip="Grab a screenshot of all windows visible onscreen." verticalHuggingPriority="750" misplaced="YES" id="436">
-                        <rect key="frame" x="15" y="443" width="185" height="19"/>
+                        <rect key="frame" x="15" y="483" width="185" height="19"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="roundRect" title="Select Window To Watch" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="437">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -433,7 +433,7 @@
                         </connections>
                     </button>
                     <button toolTip="Update the window list, adding newly created windows and removing destroyed ones." verticalHuggingPriority="750" misplaced="YES" id="472">
-                        <rect key="frame" x="15" y="418" width="185" height="18"/>
+                        <rect key="frame" x="15" y="458" width="185" height="18"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="roundRect" title="Refresh Window List" bezelStyle="roundedRect" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="473">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -444,7 +444,7 @@
                         </connections>
                     </button>
                     <button toolTip="Ignore window framing effects (such as shadows) when creating the image" misplaced="YES" tag="110" id="409">
-                        <rect key="frame" x="31" y="388" width="164" height="18"/>
+                        <rect key="frame" x="31" y="428" width="164" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Ignore Framing Effects" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="410">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -455,7 +455,7 @@
                         </connections>
                     </button>
                     <button toolTip="Create an opaque image composited over a white background." misplaced="YES" tag="111" id="411">
-                        <rect key="frame" x="31" y="368" width="159" height="18"/>
+                        <rect key="frame" x="31" y="408" width="159" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Create Opaque Image" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="412">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -466,7 +466,7 @@
                         </connections>
                     </button>
                     <button toolTip="Only draw the shadows, not the window contents themselves." misplaced="YES" tag="112" id="413">
-                        <rect key="frame" x="31" y="348" width="160" height="18"/>
+                        <rect key="frame" x="31" y="388" width="160" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Only include shadows" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="414">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -477,7 +477,7 @@
                         </connections>
                     </button>
                     <button toolTip="Controls if the image created is fit tightly to the windows selected, or if the image should be size of the desktop." misplaced="YES" tag="113" id="417">
-                        <rect key="frame" x="31" y="328" width="125" height="18"/>
+                        <rect key="frame" x="31" y="368" width="125" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Fit image tightly" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="418">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -488,14 +488,14 @@
                         </connections>
                     </button>
                     <scrollView wantsLayer="YES" misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="qEi-WJ-WKg">
-                        <rect key="frame" x="0.0" y="0.0" width="800" height="290"/>
+                        <rect key="frame" x="0.0" y="0.0" width="800" height="280"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" drawsBackground="NO" id="VDU-ei-fLa">
-                            <rect key="frame" x="1" y="1" width="798" height="288"/>
+                            <rect key="frame" x="1" y="1" width="798" height="278"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <collectionView selectable="YES" maxNumberOfColumns="1" id="C9g-Ed-IER">
-                                    <rect key="frame" x="0.0" y="0.0" width="798" height="288"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="798" height="278"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </collectionView>
@@ -507,12 +507,12 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="UYm-5C-CtO">
-                            <rect key="frame" x="783" y="1" width="16" height="288"/>
+                            <rect key="frame" x="783" y="1" width="16" height="258"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
                     <button toolTip="Grab a screenshot of all windows visible onscreen." verticalHuggingPriority="750" misplaced="YES" id="xfB-lI-Qfk">
-                        <rect key="frame" x="15" y="303" width="185" height="19"/>
+                        <rect key="frame" x="15" y="343" width="185" height="19"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="roundRect" title="Grab Screenshot" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ydD-L2-lQq">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -520,6 +520,28 @@
                         </buttonCell>
                         <connections>
                             <action selector="grabScreenShot:" target="429" id="uHw-0U-ZKO"/>
+                        </connections>
+                    </button>
+                    <button toolTip="Grab a screenshot of all windows visible onscreen." verticalHuggingPriority="750" misplaced="YES" id="uXH-Ns-USu">
+                        <rect key="frame" x="15" y="317" width="185" height="19"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="roundRect" title="Send Commands" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9ry-jj-7bb">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="cellTitle"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="sendCommands:" target="429" id="imF-Cy-im5"/>
+                        </connections>
+                    </button>
+                    <button toolTip="Grab a screenshot of all windows visible onscreen." verticalHuggingPriority="750" misplaced="YES" id="fOw-4Q-rtK">
+                        <rect key="frame" x="15" y="291" width="185" height="19"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="roundRect" title="Load Commands" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jkl-Vz-ahX">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="cellTitle"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="LoadCommands:" target="429" id="7TK-3i-PTm"/>
                         </connections>
                     </button>
                 </subviews>
