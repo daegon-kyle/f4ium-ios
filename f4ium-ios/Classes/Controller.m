@@ -72,12 +72,12 @@ extern SOLogger *gLogger;
     
     NSMutableArray *cmdList;
     int cmdInsertLocation;
+    BOOL bPauseRecording;
 }
 
 @property (weak) IBOutlet NSButton * imageFramingEffects;
 @property (weak) IBOutlet NSButton * imageOpaqueImage;
-@property (weak) IBOutlet NSButton * imageShadowsOnly;
-@property (weak) IBOutlet NSButton * imageTightFit;
+@property (weak) IBOutlet NSButton *btnPauseResume;
 
 @end
 
@@ -392,7 +392,6 @@ NSString *kvoContext = @"f4ium-iosContext";
     imageOptions = kCGWindowImageDefault;
     imageOptions = ChangeBits(imageOptions, kCGWindowImageBoundsIgnoreFraming, [_imageFramingEffects intValue] == NSOnState);
     imageOptions = ChangeBits(imageOptions, kCGWindowImageShouldBeOpaque, [_imageOpaqueImage intValue] == NSOnState);
-    imageOptions = ChangeBits(imageOptions, kCGWindowImageOnlyShadows, [_imageShadowsOnly intValue] == NSOnState);
     
     // Set initial single window options to match the UI.
     singleWindowListOptions = [self singleWindowOption];
@@ -400,7 +399,7 @@ NSString *kvoContext = @"f4ium-iosContext";
     // CGWindowListCreateImage & CGWindowListCreateImageFromArray will determine their image size dependent on the passed in bounds.
     // This sample only demonstrates passing either CGRectInfinite to get an image the size of the desktop
     // or passing CGRectNull to get an image that tightly fits the windows specified, but you can pass any rect you like.
-    imageBounds = ([_imageTightFit intValue] == NSOnState) ? CGRectNull : CGRectInfinite;
+    imageBounds = CGRectNull;
     
     // Register for updates to the selection
     [arrayController addObserver:self forKeyPath:@"selectionIndexes" options:0 context:&kvoContext];
@@ -458,6 +457,9 @@ NSString *kvoContext = @"f4ium-iosContext";
             
             if (fabs((float)(startX-endX)) <= 10 && fabs((float)(startY-endY)) <= 10)
                 dragging = NO;
+            
+            if (bPauseRecording)
+                return;
             
             [self createSingleWindowShot:selectedWindowID];
             
@@ -1305,23 +1307,10 @@ NSString *kvoContext = @"f4ium-iosContext";
     }
 }
 
-- (IBAction)toggleFramingEffects:(id)sender {
-    imageOptions = ChangeBits(imageOptions, kCGWindowImageBoundsIgnoreFraming, [sender intValue] == NSOnState);
-    [self updateImageWithSelection];
-}
-
-- (IBAction)toggleOpaqueImage:(id)sender {
-    imageOptions = ChangeBits(imageOptions, kCGWindowImageShouldBeOpaque, [sender intValue] == NSOnState);
-    [self updateImageWithSelection];
-}
-
-- (IBAction)toggleShadowsOnly:(id)sender {
-    imageOptions = ChangeBits(imageOptions, kCGWindowImageOnlyShadows, [sender intValue] == NSOnState);
-    [self updateImageWithSelection];
-}
-
-- (IBAction)toggleTightFit:(id)sender {
-    imageBounds = ([sender intValue] == NSOnState) ? CGRectNull : CGRectInfinite;
+- (IBAction)refreshWindowList:(id)sender {
+#pragma unused(sender)
+    // Refreshing the window list combines updating the window list and updating the window image.
+    [self updateWindowList];
     [self updateImageWithSelection];
 }
 
@@ -1359,16 +1348,27 @@ NSString *kvoContext = @"f4ium-iosContext";
     }
 }
 
+- (IBAction)toggleFramingEffects:(id)sender {
+    imageOptions = ChangeBits(imageOptions, kCGWindowImageBoundsIgnoreFraming, [sender intValue] == NSOnState);
+    [self updateImageWithSelection];
+}
+
+- (IBAction)toggleOpaqueImage:(id)sender {
+    imageOptions = ChangeBits(imageOptions, kCGWindowImageShouldBeOpaque, [sender intValue] == NSOnState);
+    [self updateImageWithSelection];
+}
+
 - (IBAction)grabScreenShot:(id)sender {
 #pragma unused(sender)
     [self createScreenShot];
 }
 
-- (IBAction)refreshWindowList:(id)sender {
-#pragma unused(sender)
-    // Refreshing the window list combines updating the window list and updating the window image.
-    [self updateWindowList];
-    [self updateImageWithSelection];
+- (IBAction)pauseOrResume:(id)sender {
+    if (bPauseRecording)
+        [_btnPauseResume setTitle:@"Pause Recording"];
+    else
+        [_btnPauseResume setTitle:@"Resume Recording"];
+    bPauseRecording = !bPauseRecording;
 }
 
 - (IBAction)sendCommands:(id)sender {
